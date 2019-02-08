@@ -15,7 +15,7 @@ public class PaillierTest {
         PaillierPublicKey pk = sk.getPublicKey();
         System.out.println("public key generator:" + pk.getGenerator());
         System.out.println("Modular : " + pk.getModulus());
-        BigInteger plainText = new BigInteger("10341");
+        BigInteger plainText = new BigInteger("12354");
         BigInteger cypher = pk.raw_encrypt(plainText);
         System.out.println("cypher: " + cypher);
         BigInteger pt = sk.raw_decrypt(cypher);
