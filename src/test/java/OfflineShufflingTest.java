@@ -7,10 +7,10 @@ import java.math.BigInteger;
 public class OfflineShufflingTest {
     public static void main(String[] args){
         OfflineShuffling offlineShuffling = new OfflineShuffling();
-        BigInteger[] randomArray = offlineShuffling.genRandomArray(10,100);
+        BigInteger[] randomArray = offlineShuffling.genRandomArray(5,128);
         printList(randomArray);
 
-        int[] perm = offlineShuffling.genPi(10);
+        int[] perm = offlineShuffling.genPi(5);
         printList(perm);
 
         BigInteger[] permRand = offlineShuffling.permRandomArray(randomArray,perm);
@@ -26,6 +26,8 @@ public class OfflineShufflingTest {
             System.out.print(sk.raw_decrypt(L0[i]) + " ");
         }
         System.out.println();
+
+            System.out.println(modTest(11, 12556));
     }
 
     private static void printList(BigInteger[] arr){
@@ -40,6 +42,23 @@ public class OfflineShufflingTest {
             System.out.print(arr[i] + " ");
         }
         System.out.println();
+    }
+
+    private static boolean modTest(int a, int b){
+        OfflineShuffling offlineShuffling =new OfflineShuffling();
+        int c = offlineShuffling.myMod(a, b);
+        System.out.println("Mymod result:"+ a + " % " + b + "=" + c);
+
+        BigInteger bigA = BigInteger.valueOf(a);
+        BigInteger bigB = BigInteger.valueOf(b);
+        BigInteger bigc = bigA.mod(bigB);
+        System.out.println("BigInteger reulst: " + bigc);
+        if(bigc.toString().equals(BigInteger.valueOf(c).toString())){
+            return true;
+        }
+        else {
+            return false;}
+
     }
 
 

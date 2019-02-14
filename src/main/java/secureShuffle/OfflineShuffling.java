@@ -7,13 +7,13 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 
 public class OfflineShuffling <T> {
-    private int l = 1024;
+    private int  bitSize = 1024;
     private int n = 2;
     public OfflineShuffling(){
 
     }
-    public OfflineShuffling(int l, int n){
-        this.l = l;
+    public OfflineShuffling(int bitSize, int n){
+        this.bitSize = bitSize;
         this.n = n;
     }
 
@@ -29,14 +29,14 @@ public class OfflineShuffling <T> {
     /**
      * Generate random array
      * @param size array size
-     * @param max upperbound
+     * @param bitSize bitSize
      * @return BigInteger array
      */
-    public BigInteger[] genRandomArray(int size, int max){
+    public BigInteger[] genRandomArray(int size, int bitSize){
         BigInteger [] randArray = new BigInteger[size];
         for(int i = 0; i< size; i++){
             SecureRandom rand = new SecureRandom();
-            randArray[i] = BigInteger.valueOf(rand.nextInt(max));
+            randArray[i] = new BigInteger(bitSize, rand);
         }
         return randArray;
     }
@@ -67,5 +67,9 @@ public class OfflineShuffling <T> {
             permRand[i] = arr[pi[i]];
         }
         return permRand;
+    }
+
+    public int myMod(int a, int b){
+        return (a%b + b)%b;
     }
 }
