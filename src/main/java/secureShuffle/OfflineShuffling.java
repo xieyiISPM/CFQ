@@ -2,24 +2,26 @@ package secureShuffle;
 
 import com.n1analytics.paillier.PaillierPrivateKey;
 import com.n1analytics.paillier.PaillierPublicKey;
-import org.bouncycastle.pqc.math.linearalgebra.Permutation;
+
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
 
-public class OfflineShuffling <T> {
-    private int  bitSize = 1024;
-    private int n = 2;
-    public BigInteger[] U;
-    public BigInteger[] V;
+public class OfflineShuffling  {
+
+    public BigInteger[] U; //only for test
+    public BigInteger[] V; //only for test
     public OfflineShuffling(){
 
     }
-    public OfflineShuffling(int bitSize, int n){
-        this.bitSize = bitSize;
-        this.n = n;
-    }
 
+    /**
+     * Hospital Hi generates encrypted vector v: L0
+     * @param arraySize size of v array and L0 array
+     * @param bitSize   upper bound of v array is 2^bitsize -1
+     * @param paillierPublicKey  Paillier public key
+     * @return return L0 array
+     */
     public BigInteger[] genL0(int arraySize, int bitSize, PaillierPublicKey paillierPublicKey){
         BigInteger[] vArray = genRandomArray(arraySize, bitSize);
         //System.out.println("v array:");
@@ -34,7 +36,17 @@ public class OfflineShuffling <T> {
         return L0;
     }
 
-    public BigInteger[] genL1(int arraySize,int bitSize, BigInteger twoToL,BigInteger[] L0, int[] pi,PaillierPublicKey paillierPublicKey ){
+    /**
+     * Medical Center C generates L1
+     * @param arraySize size of u array, r array, and L1 array
+     * @param bitSize upper bounds of u array is 2^bitSize -1
+     * @param twoToL A very big number which is at least bigger than 2* 2^bitSize to make sure u+v is smaller than twoToL
+     * @param L0 L0 array from Hi
+     * @param pi permutation function
+     * @param paillierPublicKey  Paillier public key
+     * @return return L1 array
+     */
+    public BigInteger[] genL1(int arraySize, int bitSize, BigInteger twoToL,BigInteger[] L0, int[] pi,PaillierPublicKey paillierPublicKey ){
         BigInteger[] uArray = genRandomArray(arraySize,bitSize);
         U = uArray;
         //System.out.println("u Array:");
@@ -47,9 +59,17 @@ public class OfflineShuffling <T> {
             BigInteger uPlusR = paillierPublicKey.raw_encrypt(uArray[i].add(rArray[i]));
             L1[i] = L0[i].multiply(uPlusR);
         }
-        return permRandomArray(L1,pi);
+        InitSet initSet = new InitSet();
+        return initSet.permRandomArray(L1,pi);
     }
 
+    /**
+     * Hospital Hi generate offline output, which is L2 array
+     * @param L1 L1 array from Medical Center C
+     * @param twoToL A very big number which is at least bigger than 2* 2^bitSize to make sure u+v is smaller than twoToL
+     * @param paillierPrivateKey Paillier private key
+     * @return return Hi output [-u-v], which is permuted though permutation function pi
+     */
     public BigInteger[] genL2(BigInteger[] L1,BigInteger twoToL, PaillierPrivateKey paillierPrivateKey){
         BigInteger[] L2 = new BigInteger[L1.length];
 
@@ -96,38 +116,23 @@ public class OfflineShuffling <T> {
         return rArray;
     }
 
-    /**
-     * Generate pi function : Create a random permutation of the given size;
-     * @param size array size
-     * @return permuted array index
-     */
-    public int[] genPi(int size){
-        Permutation perm = new Permutation(size, new SecureRandom());
-        return perm.getVector();
-    }
+
+
 
     /**
-     * Permutate random array by using pre-generated pi function
-     * @param arr
-     * @param pi
-     * @return return permuted array
+     * mod function implementation
+     * @param a number
+     * @param b modular
+     * @return
      */
-    private BigInteger[] permRandomArray(BigInteger[] arr, int[] pi){
-        if(arr.length != pi.length) {
-            System.err.println("Array size does not match permutation function size");
-            return null;
-        }
-        BigInteger[] permRand = new BigInteger[arr.length];
-        for(int i = 0; i< arr.length; i++){
-            permRand[i] = arr[pi[i]];
-        }
-        return permRand;
-    }
-
     public int myMod(int a, int b){
         return (a%b + b)%b;
     }
 
+    /**
+     * Helper function print list
+     * @param arr array list
+     */
     private static void printList(BigInteger[] arr){
         for(int i = 0; i< arr.length;i++){
             System.out.print(arr[i] + " " );

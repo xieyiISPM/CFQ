@@ -1,5 +1,6 @@
 import com.n1analytics.paillier.PaillierPrivateKey;
 import com.n1analytics.paillier.PaillierPublicKey;
+import secureShuffle.InitSet;
 import secureShuffle.OfflineShuffling;
 
 import java.math.BigInteger;
@@ -82,8 +83,9 @@ public class OfflineShufflingTest {
         PaillierPrivateKey paillierPrivateKey = PaillierPrivateKey.create(1024);
         PaillierPublicKey paillierPublicKey = paillierPrivateKey.getPublicKey();
         boolean testResult = true;
-        for(int j= 0; j< 100; j++) {
-            int[] pi = offlineShuffling.genPi(arraySize);
+        for(int j= 0; j< 10; j++) {
+            InitSet initSet = new InitSet();
+            int[] pi = initSet.genPi(arraySize);
             BigInteger[] L0 = offlineShuffling.genL0(arraySize, bitSize, paillierPublicKey);
             BigInteger[] L1 = offlineShuffling.genL1(arraySize, bitSize, twoToL, L0, pi, paillierPublicKey);
             BigInteger[] L2 = offlineShuffling.genL2(L1, twoToL, paillierPrivateKey);
