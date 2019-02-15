@@ -3,6 +3,7 @@ import com.n1analytics.paillier.PaillierPublicKey;
 import secureShuffle.OfflineShuffling;
 
 import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.*;
 
 public class OfflineShufflingTest {
@@ -30,6 +31,7 @@ public class OfflineShufflingTest {
 
         //System.out.println(modTest(1000));
         offlineTest();
+        hashCodeTest();
     }
 
     private static void printList(BigInteger[] arr){
@@ -80,7 +82,7 @@ public class OfflineShufflingTest {
         PaillierPrivateKey paillierPrivateKey = PaillierPrivateKey.create(1024);
         PaillierPublicKey paillierPublicKey = paillierPrivateKey.getPublicKey();
         boolean testResult = true;
-        for(int j= 0; j< 500; j++) {
+        for(int j= 0; j< 100; j++) {
             int[] pi = offlineShuffling.genPi(arraySize);
             BigInteger[] L0 = offlineShuffling.genL0(arraySize, bitSize, paillierPublicKey);
             BigInteger[] L1 = offlineShuffling.genL1(arraySize, bitSize, twoToL, L0, pi, paillierPublicKey);
@@ -91,28 +93,55 @@ public class OfflineShufflingTest {
                 uvList.add(offlineShuffling.U[i].add(offlineShuffling.V[i]));
             }
 
-            Iterator<BigInteger> it = uvList.iterator();
+            /*Iterator<BigInteger> it = uvList.iterator();
             while(it.hasNext()){
                 System.out.print(it.next() + " ");
             }
-            System.out.println();
+            System.out.println();*/
 
             for (int i = 0; i < arraySize; i++) {
                 boolean isRemoved = uvList.remove(L2[i].negate());
                 if (!isRemoved) {
-                    System.out.println("Test fails!");
+                    System.out.println("Offline Test fails!");
                     System.out.println(L2[i].negate());
                     return;
                 }
             }
             if (!uvList.isEmpty()) {
                 testResult = false;
-                System.out.println("Test fails!");
+                System.out.println("Offline Test fails!");
                 return;
             }
         }
         if(testResult){
-            System.out.println("Test passed!");
+            System.out.println("Offline Test passed!");
+        }
+    }
+
+    private static boolean hashCodeTest(){
+        HashSet<BigInteger> hashSet = new HashSet<>();
+        for(int i= 0; i< 100000; i++){
+            Random rnd = new SecureRandom();
+            int a = rnd.nextInt(100000);
+            int b = rnd.nextInt(100000);
+            int c = a + b;
+            hashSet.add(BigInteger.valueOf(c));
+            BigInteger bigA = BigInteger.valueOf(a);
+            BigInteger bigB = BigInteger.valueOf(b);
+            BigInteger bigC = bigA.add(bigB);
+
+            if(!hashSet.remove(bigC)){
+                System.out.println("Remove from hash set!");
+                return false;
+            }
+        }
+        if(hashSet.isEmpty()) {
+            System.out.println("hashcode Test passed!");
+            return true;
+        }
+        else{
+            System.out.println("hashCode Test fails!");
+            return false;
         }
     }
 
