@@ -10,6 +10,8 @@ import java.security.SecureRandom;
 public class OfflineShuffling <T> {
     private int  bitSize = 1024;
     private int n = 2;
+    public BigInteger[] U;
+    public BigInteger[] V;
     public OfflineShuffling(){
 
     }
@@ -20,24 +22,26 @@ public class OfflineShuffling <T> {
 
     public BigInteger[] genL0(int arraySize, int bitSize, PaillierPublicKey paillierPublicKey){
         BigInteger[] vArray = genRandomArray(arraySize, bitSize);
-        System.out.println("v array:");
-        printList(vArray);
+        //System.out.println("v array:");
+        //printList(vArray);
+        V = vArray;
         BigInteger L0[] = new BigInteger[arraySize];
         for(int i = 0; i< L0.length; i++){
             L0[i] = paillierPublicKey.raw_encrypt(vArray[i]);
         }
-        System.out.println("L0: ");
+        //System.out.println("L0: ");
         //printList(L0);
         return L0;
     }
 
     public BigInteger[] genL1(int arraySize,int bitSize, BigInteger twoToL,BigInteger[] L0, int[] pi,PaillierPublicKey paillierPublicKey ){
         BigInteger[] uArray = genRandomArray(arraySize,bitSize);
-        System.out.println("u Array:");
-        printList(uArray);
+        U = uArray;
+        //System.out.println("u Array:");
+        //printList(uArray);
         BigInteger[] rArray = genRArray(arraySize,bitSize, twoToL);
-        System.out.println("r Array:");
-        printList(rArray);
+        //System.out.println("r Array:");
+        //printList(rArray);
         BigInteger L1[] = new BigInteger[arraySize];
         for(int i=0; i< arraySize; i++){
             BigInteger uPlusR = paillierPublicKey.raw_encrypt(uArray[i].add(rArray[i]));
@@ -48,12 +52,13 @@ public class OfflineShuffling <T> {
 
     public BigInteger[] genL2(BigInteger[] L1,BigInteger twoToL, PaillierPrivateKey paillierPrivateKey){
         BigInteger[] L2 = new BigInteger[L1.length];
+
         for(int i= 0; i< L1.length; i++){
             L2[i] = paillierPrivateKey.raw_decrypt(L1[i]);
             L2[i] = (L2[i].mod(twoToL)).negate();
         }
-        System.out.println("L2");
-        printList(L2);
+        //System.out.println("L2");
+        //printList(L2);
         return L2;
     }
 
@@ -76,8 +81,8 @@ public class OfflineShuffling <T> {
 
     /**
      * Generate r array, twoToL must be carefully chosen,
-     * @param arraySize
-     * @param bitSize
+     * @param arraySize r array's size
+     * @param bitSize   r < 2^bitsize -1
      * @param twoToL  twoToL must larger than u + v: if u and v is smaller than 1024, then twoToL must be larger than 2048
      * @return
      */

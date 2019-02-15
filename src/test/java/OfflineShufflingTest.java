@@ -3,7 +3,7 @@ import com.n1analytics.paillier.PaillierPublicKey;
 import secureShuffle.OfflineShuffling;
 
 import java.math.BigInteger;
-import java.util.Random;
+import java.util.*;
 
 public class OfflineShufflingTest {
     public static void main(String[] args){
@@ -71,23 +71,49 @@ public class OfflineShufflingTest {
 
     }
 
-    private static boolean offlineTest(){
+    private static void offlineTest(){
         OfflineShuffling offlineShuffling = new OfflineShuffling();
-        int arraySize = 3;
+        int arraySize = 100;
         int bitSize = 10;
 
-        BigInteger twoToL = BigInteger.valueOf(2^(2*1024));
+        BigInteger twoToL = BigInteger.valueOf(2^(2*2024));
         PaillierPrivateKey paillierPrivateKey = PaillierPrivateKey.create(1024);
         PaillierPublicKey paillierPublicKey = paillierPrivateKey.getPublicKey();
+        boolean testResult = true;
+        for(int j= 0; j< 500; j++) {
+            int[] pi = offlineShuffling.genPi(arraySize);
+            BigInteger[] L0 = offlineShuffling.genL0(arraySize, bitSize, paillierPublicKey);
+            BigInteger[] L1 = offlineShuffling.genL1(arraySize, bitSize, twoToL, L0, pi, paillierPublicKey);
+            BigInteger[] L2 = offlineShuffling.genL2(L1, twoToL, paillierPrivateKey);
 
-        int[] pi = offlineShuffling.genPi(arraySize);
-        boolean result = true;
-        BigInteger[] L0= offlineShuffling.genL0(arraySize, bitSize, paillierPublicKey);
-        BigInteger[] L1 = offlineShuffling.genL1(arraySize, bitSize, twoToL,L0, pi, paillierPublicKey);
-        BigInteger[] L2 = offlineShuffling.genL2(L1, twoToL, paillierPrivateKey);
+            LinkedList<BigInteger> uvList = new LinkedList<>();
+            for (int i = 0; i < arraySize; i++) {
+                uvList.add(offlineShuffling.U[i].add(offlineShuffling.V[i]));
+            }
 
+            Iterator<BigInteger> it = uvList.iterator();
+            while(it.hasNext()){
+                System.out.print(it.next() + " ");
+            }
+            System.out.println();
 
-        return result;
+            for (int i = 0; i < arraySize; i++) {
+                boolean isRemoved = uvList.remove(L2[i].negate());
+                if (!isRemoved) {
+                    System.out.println("Test fails!");
+                    System.out.println(L2[i].negate());
+                    return;
+                }
+            }
+            if (!uvList.isEmpty()) {
+                testResult = false;
+                System.out.println("Test fails!");
+                return;
+            }
+        }
+        if(testResult){
+            System.out.println("Test passed!");
+        }
     }
 
 
