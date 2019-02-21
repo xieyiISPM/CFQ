@@ -38,5 +38,15 @@ public class InitSet {
         return permRand;
     }
 
+    public BigInteger[] genRandomArray(int arraySize, int bitSize) {
+        BigInteger[] randArray = new BigInteger[arraySize];
+        SecureRandom srand = new SecureRandom();
+
+        for (int i = 0; i < arraySize; i++) {
+            randArray[i] = new BigInteger(bitSize, srand);
+        }
+        return randArray;
+    }
+
 
 }

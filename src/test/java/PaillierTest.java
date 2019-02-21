@@ -13,6 +13,7 @@ public class PaillierTest {
         TimeUnit timeUnit = TimeUnit.MICROSECONDS;
         PaillierPrivateKey sk = PaillierPrivateKey.create(1024);
         PaillierPublicKey pk = sk.getPublicKey();
+
         System.out.println("public key generator:" + pk.getGenerator());
         System.out.println("Modular : " + pk.getModulus());
         BigInteger plainText = new BigInteger("12354");
