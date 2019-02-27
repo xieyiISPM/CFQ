@@ -28,6 +28,10 @@ public class SecureCompare {
         //Ha generate distPrime
         BigInteger distHaPrime = genDistPrime(distHa, rA);
         BigInteger distHbPrime = genDistPrime(distHb, rB);
+        /*System.out.print("distHaPrime");
+        System.out.println(distHaPrime);
+        System.out.print("distHbPrime");
+        System.out.println(distHbPrime);*/
         return distHaPrime.compareTo(distHbPrime);
     }
 
