@@ -9,11 +9,10 @@ import java.util.List;
 public class ArithmeticSharingTest {
     public static void main(String[] args){
         SecureRandom srand = new SecureRandom();
-        int bitSize = 5;
+        int bitSize = 511; //NOTE: bitSize < Pailliar modular size /2 !!!!
         boolean testResult = true;
-        long modular = (long)Math.pow(2,bitSize);
-        BigInteger m = BigInteger.valueOf(modular);
-        int testRound = 10000;
+        BigInteger m = (BigInteger.TWO).pow(bitSize);
+        int testRound = 100;
 
         //Test generate arithmetic share
         /*for(int i =0; i< 1000; i++) {
@@ -32,7 +31,7 @@ public class ArithmeticSharingTest {
         }*/
 
         //test generate arithmetic MT via HE (Pailliar) based on paper ABY
-        for(int i =0; i< testRound; i++) {
+        /*for(int i =0; i< testRound; i++) {
             List<BigInteger[]> mtList = genPailliarArithmeticMT(bitSize, m);
 
             if(!mtList.get(2)[2].equals((mtList.get(0)[2].multiply(mtList.get(1)[2]).mod(m)))){
@@ -47,11 +46,11 @@ public class ArithmeticSharingTest {
         }
         else{
             System.out.println("Pailliar MT test fails!");
-        }
+        }*/
 
 
         //Test multiplication
-        /*for(int i= 0; i < testRound; i++){
+        for(int i= 0; i < testRound; i++){
             BigInteger[] x = genShares(bitSize, m);
             BigInteger[] y = genShares(bitSize, m);
             if(!testMultiplication(x, y,bitSize, m)){
@@ -64,7 +63,7 @@ public class ArithmeticSharingTest {
         }
         else{
             System.out.println("Multiplication test fails!");
-        }*/
+        }
 
     }
 
@@ -111,8 +110,19 @@ public class ArithmeticSharingTest {
 
     private static boolean testMultiplication(BigInteger[] x, BigInteger[] y, int bitSize, BigInteger m){
         BigInteger[] c = new BigInteger[3];
-        BigInteger[] a = genShares(bitSize, m);
-        BigInteger[] b = genShares(bitSize,m);
+       /* BigInteger[] a = genShares(bitSize, m);
+        BigInteger[] b = genShares(bitSize,m);*/
+
+        BigInteger[] a = new BigInteger[3];
+        BigInteger[] b = new BigInteger[3];
+
+        List<BigInteger[]> mtList = genPailliarArithmeticMT(bitSize, m);
+        for(int i = 0; i< 3; i++){
+            a[i] = mtList.get(0)[i];
+            b[i] = mtList.get(1)[i];
+            c[i] = mtList.get(2)[i];
+
+        }
 
         SecureRandom srand = new SecureRandom();
         c[0] = new BigInteger(bitSize, srand);
@@ -147,7 +157,8 @@ public class ArithmeticSharingTest {
         BigInteger[] c = new BigInteger[3];
         c[1] = ((a[1].multiply(b[1]).mod(m)).subtract(r)).mod(m);
 
-        PaillierPrivateKey sk = PaillierPrivateKey.create(1024);
+        int modulusLength = 1024;
+        PaillierPrivateKey sk = PaillierPrivateKey.create(modulusLength);
         PaillierPublicKey pk = sk.getPublicKey();
         BigInteger cypherA0 = pk.raw_encrypt(a[0]);
         BigInteger cypherB0 = pk.raw_encrypt(b[0]);
