@@ -32,7 +32,7 @@ public class ShufflingTest {
         System.out.println();*/
 
         //System.out.println(modTest(1000));
-        // offlineTest();
+        //offlineTest();
         //hashCodeTest();
         System.out.println(onlineShufflingTest());
     }
@@ -78,14 +78,14 @@ public class ShufflingTest {
 
     private static void offlineTest(){
         OfflineShuffling offlineShuffling = new OfflineShuffling();
-        int arraySize = 100;
+        int arraySize = 10;
         int bitSize = 10;
 
-        BigInteger twoToL = BigInteger.valueOf(2^(2*2024));
+        BigInteger twoToL = BigInteger.valueOf(1024);
         PaillierPrivateKey paillierPrivateKey = PaillierPrivateKey.create(1024);
         PaillierPublicKey paillierPublicKey = paillierPrivateKey.getPublicKey();
         boolean testResult = true;
-        for(int j= 0; j< 100; j++) { //test 10 times
+        for(int j= 0; j< 1; j++) { //test 100 times
             InitSet initSet = new InitSet();
             int[] pi = initSet.genPi(arraySize);
             BigInteger[] L0 = offlineShuffling.genL0(arraySize, bitSize, paillierPublicKey);
@@ -97,11 +97,21 @@ public class ShufflingTest {
                 uvList.add((offlineShuffling.U[i].add(offlineShuffling.V[i])).mod(twoToL));
             }
 
-            /*Iterator<BigInteger> it = uvList.iterator();
+            System.out.println("U list:");
+            printList(offlineShuffling.U);
+
+            System.out.println("V list:");
+            printList(offlineShuffling.V);
+
+            System.out.println("L2 list: ");
+            printList(L2);
+
+            System.out.println("UV list");
+            Iterator<BigInteger> it = uvList.iterator();
             while(it.hasNext()){
                 System.out.print(it.next() + " ");
             }
-            System.out.println();*/
+            System.out.println();
 
             for (int i = 0; i < arraySize; i++) {
                 boolean isRemoved = uvList.remove(L2[i].negate());

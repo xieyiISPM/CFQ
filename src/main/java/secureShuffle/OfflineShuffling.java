@@ -56,8 +56,9 @@ public class OfflineShuffling  {
         //printList(rArray);
         BigInteger L1[] = new BigInteger[arraySize];
         for(int i=0; i< arraySize; i++){
-            BigInteger uPlusR = paillierPublicKey.raw_encrypt(uArray[i].add(rArray[i]));
-            L1[i] = (L0[i].multiply(uPlusR)).mod(paillierPublicKey.getModulusSquared());
+            BigInteger uPlusR = paillierPublicKey.raw_encrypt((uArray[i].add(rArray[i])).mod(twoToL));
+            L1[i] = paillierPublicKey.raw_add(L0[i], uPlusR);
+            //L1[i] = (L0[i].multiply(uPlusR)).mod(paillierPublicKey.getModulusSquared());
         }
         InitSet initSet = new InitSet();
         return initSet.permRandomArray(L1,pi);

@@ -9,10 +9,10 @@ import java.util.List;
 public class ArithmeticSharingTest {
     public static void main(String[] args){
         SecureRandom srand = new SecureRandom();
-        int bitSize = 511; //NOTE: bitSize < Pailliar modular size /2 !!!!
+        int bitSize = 10; //NOTE: bitSize < Pailliar modular size /2 !!!!
         boolean testResult = true;
         BigInteger m = (BigInteger.TWO).pow(bitSize);
-        int testRound = 100;
+        int testRound = 10;
 
         //Test generate arithmetic share
         /*for(int i =0; i< 1000; i++) {
@@ -157,7 +157,7 @@ public class ArithmeticSharingTest {
         BigInteger[] c = new BigInteger[3];
         c[1] = ((a[1].multiply(b[1]).mod(m)).subtract(r)).mod(m);
 
-        int modulusLength = 1024;
+        int modulusLength = 256;
         PaillierPrivateKey sk = PaillierPrivateKey.create(modulusLength);
         PaillierPublicKey pk = sk.getPublicKey();
         BigInteger cypherA0 = pk.raw_encrypt(a[0]);
