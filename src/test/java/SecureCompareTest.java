@@ -5,25 +5,35 @@ import java.security.SecureRandom;
 
 public class SecureCompareTest {
     public static void main(String[] args){
+
         System.out.println(secureCompareTest());
     }
 
-    private static String secureCompareTest(){
-        SecureCompare sc = new SecureCompare();
+    private static double secureCompareTest(){
         SecureRandom srand = new SecureRandom();
         int bitSize = 10;
-        BigInteger twoToL =  BigInteger.valueOf(2^(2*2024));
+        SecureCompare sc = new SecureCompare(bitSize);
 
-        for(int testRound = 0; testRound < 100000; testRound++) {
-            BigInteger distHa = new BigInteger(bitSize, srand);
-           // System.out.print("distHa: ");
-            //System.out.println(distHa);
-            BigInteger distHb = new BigInteger(bitSize, srand);
-            //System.out.print("distHb: ");
-            //System.out.println(distHb);
+        BigInteger twoToL =  BigInteger.TWO.pow(bitSize);
+        long totalTestRound = 100000;
+        int failTimes= 0;
+        for( int testRound = 0; testRound < totalTestRound; testRound++) {
+            //BigInteger distA = new BigInteger(bitSize-1,srand);
+            BigInteger distA = BigInteger.ONE;
             BigInteger distCa = new BigInteger(bitSize, srand);
+            BigInteger distHa =((distA.subtract(distCa)).mod(twoToL));
+
+            //BigInteger distB = new BigInteger(bitSize-1,srand);
+            BigInteger distB = BigInteger.valueOf(255);
             BigInteger distCb = new BigInteger(bitSize, srand);
-            int rawCompareResult = ((distHa.add(distCa)).mod(twoToL)).compareTo((distHb.add(distCb)).mod(twoToL));
+            BigInteger distHb =((distB.subtract(distCb)).mod(twoToL));
+
+            /*System.out.print("distA: ");
+            System.out.println(distA);
+            System.out.print("distB: ");
+            System.out.println(distB);
+            System.out.println();*/
+            int rawCompareResult = (distA.compareTo(distB));
             int secureCompareResult = sc.secureCompare(distHa, distCa, distHb, distCb);
             /*System.out.print("distHa: ");
             System.out.println(distHa);
@@ -32,9 +42,10 @@ public class SecureCompareTest {
             System.out.print("distHb: ");
             System.out.println(distHb);
             System.out.print("distCb: ");
-            System.out.println(distCb);*/
+            System.out.println(distCb);
+            System.out.println();*/
             if (rawCompareResult != secureCompareResult) {
-                System.out.print("distHa: ");
+                /*System.out.print("distHa: ");
                 System.out.println(distHa);
                 System.out.print("distCa: ");
                 System.out.println(distCa);
@@ -45,13 +56,13 @@ public class SecureCompareTest {
                 System.out.println();
                 System.out.println("rawCompareResult: " + rawCompareResult);
                 System.out.println("secureCompareResult: " + secureCompareResult );
-                System.out.println("test round= " + testRound);
-                return "Secure compare test failed";
+                System.out.println("test round= " + testRound);*/
+                failTimes++;
             }
             //System.out.println();
         }
-
-        return "Secure compare test passed";
+        System.out.println(failTimes);
+        return (double)failTimes/totalTestRound;
 
     }
 }

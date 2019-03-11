@@ -51,6 +51,11 @@ public class ShufflingTest {
         System.out.println();
     }
 
+    /**
+     * test mymod function
+     * @param testRound Test times
+     * @return
+     */
     private static boolean modTest(int testRound){
         Random rnd = new Random();
         boolean result = true;
@@ -76,12 +81,16 @@ public class ShufflingTest {
 
     }
 
+    /**
+     * Test offline shuffling. Warning: bitsize < Paillier secure factor/2
+     * for example if Paillier keys are genereated by 1024. the bitsize should less than 512
+     */
     private static void offlineTest(){
         OfflineShuffling offlineShuffling = new OfflineShuffling();
-        int arraySize = 10;
+        int arraySize = 100000;
         int bitSize = 10;
 
-        BigInteger twoToL = BigInteger.valueOf(1024);
+        BigInteger twoToL = (BigInteger.TWO).pow(bitSize);
         PaillierPrivateKey paillierPrivateKey = PaillierPrivateKey.create(1024);
         PaillierPublicKey paillierPublicKey = paillierPrivateKey.getPublicKey();
         boolean testResult = true;
@@ -132,11 +141,17 @@ public class ShufflingTest {
         }
     }
 
+    /**
+     * Test online shuffling with offline result. Warning: bitsize < Paillier secure factor/2
+     * for example if Paillier keys are genereated by 1024. the bitsize should less than 512
+     * @return test result
+     * @throws Exception
+     */
     private static String onlineShufflingTest() throws Exception{
         OfflineShuffling offlineShuffling = new OfflineShuffling();
-        int arraySize = 10;
-        int bitSize = 10;
-        BigInteger twoToL = BigInteger.valueOf(2^(2*2024));
+        int arraySize = 10000;
+        int bitSize = 510; // note  bitsize < paillier secrete factor/2
+        BigInteger twoToL = (BigInteger.TWO).pow(bitSize);
         PaillierPrivateKey paillierPrivateKey = PaillierPrivateKey.create(1024);
         PaillierPublicKey paillierPublicKey = paillierPrivateKey.getPublicKey();
         InitSet initSet = new InitSet();
@@ -159,6 +174,8 @@ public class ShufflingTest {
             secretArray[i] = (L2[i].add(L4[i])).mod(twoToL);
         }
 
+
+
         // System.out.println("xH:");
         //printList(xH);
         //System.out.println("xC");
@@ -173,42 +190,40 @@ public class ShufflingTest {
         //printList(L4);
         //System.out.println("L2=-u-v (shuffled!)");
         //printList(L2);
-        System.out.println("Secret Array");
-        printList(secretArray);
+        /*System.out.println("Secret Array before sort:");
+        printList(secretArray);*/
+        Arrays.parallelSort(secretArray);
 
-        LinkedList<BigInteger> xList = new LinkedList<>();
+        /*System.out.println("Secret Array after sort:");
+        printList(secretArray);*/
+
+        BigInteger[] xList = new BigInteger[arraySize];
         for (int i = 0; i < arraySize; i++) {
-            xList.add(xH[i].add(xC[i]));
+            xList[i]=xH[i].add(xC[i]).mod(twoToL);
         }
 
-        System.out.println("xList");
-        for(int i= 0; i< xList.size(); i++){
-            System.out.print(xList.get(i) + " ");
-        }
-        System.out.println();
+        /*System.out.println("xList Array before sort:");
+        printList(xList);*/
 
+        Arrays.parallelSort(xList);
+
+        /*System.out.println("xList Array after sort:");
+        printList(xList);*/
 
         for (int i = 0; i < arraySize; i++) {
-            boolean isRemoved = xList.remove(secretArray[i]);
-            if (!isRemoved) {
-                System.out.println(xList.get(i));
+
+            if (secretArray[i].compareTo(xList[i])!=0) {
+                System.out.println(xList[i]);
                 return "online Test fails!";
-
             }
         }
-        if (!xList.isEmpty()) {
-            return "online Test fails!";
-        }
-        else {
-            return "onLine Test passed!";
-        }
-
-
-
-
-
+        return "online Test passes!";
     }
 
+    /**
+     * Test BigInteger's hascode
+     * @return
+     */
     private static boolean hashCodeTest(){
         HashSet<BigInteger> hashSet = new HashSet<>();
         for(int i= 0; i< 100000; i++){
