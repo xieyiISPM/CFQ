@@ -11,13 +11,13 @@ public class SecureCompareTest {
 
     private static double secureCompareTest(){
         SecureRandom srand = new SecureRandom();
-        int bitSize = 200;
+        int bitSize = 120;
         int distBitSize = 100;
         int startValue = Integer.MAX_VALUE;
         SecureCompare sc = new SecureCompare(bitSize);
 
         BigInteger twoToL =  BigInteger.TWO.pow(bitSize);
-        long totalTestRound = 10000000;
+        long totalTestRound = 1000000;
         int failTimes= 0;
         for( int testRound = 0; testRound < totalTestRound; testRound++) {
             BigInteger randA = new BigInteger(distBitSize,srand);
@@ -32,14 +32,14 @@ public class SecureCompareTest {
             BigInteger distCb = new BigInteger(bitSize, srand);
             BigInteger distHb =((distB.subtract(distCb)).mod(twoToL));
 
-            System.out.print("distA: ");
+            /*System.out.print("distA: ");
             System.out.println(distA);
             System.out.print("distB: ");
             System.out.println(distB);
-            System.out.println();
+            System.out.println();*/
             int rawCompareResult = (distA.compareTo(distB));
             int secureCompareResult = sc.secureCompare(distHa, distCa, distHb, distCb);
-            System.out.print("distHa: ");
+            /*System.out.print("distHa: ");
             System.out.println(distHa);
             System.out.print("distCa: ");
             System.out.println(distCa);
@@ -47,7 +47,7 @@ public class SecureCompareTest {
             System.out.println(distHb);
             System.out.print("distCb: ");
             System.out.println(distCb);
-            System.out.println();
+            System.out.println();*/
             if (rawCompareResult != secureCompareResult) {
                 /*System.out.print("distHa: ");
                 System.out.println(distHa);
@@ -63,7 +63,7 @@ public class SecureCompareTest {
                 System.out.println("test round= " + testRound);
                 failTimes++;
             }
-            System.out.println();
+            //System.out.println();
         }
         System.out.println(failTimes);
         return (double)failTimes/totalTestRound;

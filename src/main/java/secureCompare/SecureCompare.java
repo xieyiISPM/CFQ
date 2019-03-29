@@ -33,8 +33,8 @@ public class SecureCompare {
         BigInteger distHbPrime = genDistPrime(distHb, blindedCb);
 
 
-        System.out.print("random r:");
-        System.out.println(r);
+        /*System.out.print("random r:");
+        System.out.println(r);*/
         /* System.out.print("distHaPrime:");
         System.out.println(distHaPrime);
         System.out.print("distHbPrime: ");

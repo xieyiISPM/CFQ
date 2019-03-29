@@ -9,5 +9,8 @@
         <module name="CFQ" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="CFQ" target="11" />
+    </bytecodeTargetLevel>
   </component>
 </project>
