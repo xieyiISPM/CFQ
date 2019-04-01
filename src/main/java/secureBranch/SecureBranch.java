@@ -28,14 +28,15 @@ public class SecureBranch {
         SSF ssf = new SSF(bitSize);
         int[] pi = ssf.getPi(arraySizeX);
         OfflineShuffling offlineShufflingX = new OfflineShuffling();
-        BigInteger[] xHPrime = ssf.getOfflineOutput(arraySizeX, offlineShufflingX);
-        BigInteger[] xCPrime = ssf.getOnlineOuptut(arraySizeX,xA, xB,offlineShufflingX,pi );
+        BigInteger[] xAPrime = ssf.getOfflineOutput(arraySizeX, offlineShufflingX);
+        BigInteger[] xBPrime = ssf.getOnlineOuptut(arraySizeX,xA, xB,offlineShufflingX,pi );
 
         OfflineShuffling offlineShufflingY = new OfflineShuffling();
         BigInteger[] yHPrime = ssf.getOfflineOutput(arraySizeX, offlineShufflingY);
         BigInteger[] yCPrime = ssf.getOnlineOuptut(arraySizeX,xA, xB,offlineShufflingY,pi );
 
         GarbledCircuit gc = new GarbledCircuit();
+        //input file will be xAPrime, and xBPrime;
         int theta = gc.add_cmp(serverOutputFile, clientOutputFile);
 
         //check which should be assigned to yOutputA/yOutputB
