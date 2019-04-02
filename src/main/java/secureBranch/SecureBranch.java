@@ -52,11 +52,19 @@ public class SecureBranch {
 
     }
 
-    public BigInteger getYA(BigInteger yOutputA){
+    public BigInteger[] genArray(BigInteger bigInt1, BigInteger bigInt2){
+        BigInteger[] arr= new BigInteger[2];
+        arr[0] = bigInt1;
+        arr[1] = bigInt2;
+        return arr;
+
+    }
+
+    public BigInteger getYA(){
         return yOutputA;
     }
 
-    public BigInteger getYB(BigInteger yOutputB){
+    public BigInteger getYB(){
         return yOutputB;
     }
 

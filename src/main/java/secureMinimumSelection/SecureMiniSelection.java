@@ -4,7 +4,6 @@ import gc.GarbledCircuit;
 import secureShuffle.OfflineShuffling;
 import secureShuffle.SSF;
 import java.math.BigInteger;
-import java.rmi.server.ExportException;
 
 public class SecureMiniSelection {
     private BigInteger xMinA;
@@ -48,7 +47,16 @@ public class SecureMiniSelection {
 
     }
 
-    public BigInteger getxMinA(){
+    public BigInteger[] genArray(BigInteger... args){
+        BigInteger[] arr = new BigInteger[args.length];
+        for(int i = 0; i< args.length; i++ ){
+            arr[i] =  args[i];
+        }
+        return arr;
+    }
+
+
+    public BigInteger getMinA(){
         return xMinA;
     }
 
