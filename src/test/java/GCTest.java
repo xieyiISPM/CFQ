@@ -1,30 +1,40 @@
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
+
+import io.CreateInputFile;
+import io.GCOutAccess;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Map;
+import java.math.BigInteger;
 
 public class GCTest{
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         String circuitFile = "cmp.cir";
         String serverInputFile = "b_side";
         String clientInputFile = "a_side";
-        String cmd = "testfiles";
-        garbledCircuitTest(cmd, circuitFile,serverInputFile,clientInputFile);
+        String cmd = "/home/yi/Workspace/CFQ/GCParser/runtestgcparser";
+        String gcDir = "/home/yi/Workspace/CFQ/GCParser";
+        String clientFileName = "GCParser/results/siclientout";
+        String serverFileName = "GCParser/results/siserverout";
+
+        garbledCircuitTest(cmd, gcDir,circuitFile,serverInputFile,clientInputFile, clientFileName, serverFileName);
     }
 
-    private static void garbledCircuitTest(String cmd, String circuitFile, String serverInputFile, String clientInputFile) throws IOException {
+    private static void garbledCircuitTest(String cmd, String gcDir, String circuitFile, String serverInputFile, String clientInputFile, String clientFileName, String serverFileName) throws Exception {
         try{
-           // ProcessBuilder gcProcess = new ProcessBuilder();
-            //gcProcess.command(cmd,circuitFile);
-            ProcessBuilder gcProcess = new ProcessBuilder("/home/yi/Workspace/CFQ/GCParser/runtestgcparser", circuitFile,serverInputFile,clientInputFile );
-            gcProcess.directory(new File("/home/yi/Workspace/CFQ/GCParser"));
-            //Map<String,String> env = gcProcess.environment();
-            //env.put("PATH", "/home/yi/Workspace/CFQ/GCParser");
-           // gcProcess.redirectErrorStream(true);
+
+            CreateInputFile ciA = new CreateInputFile("a_side");
+            CreateInputFile ciB = new CreateInputFile("b_side");
+
+            ciA.setClientVar(BigInteger.valueOf(2220));
+            ciB.setSeverVar(BigInteger.valueOf(1248));
+
+
+            //must have absolute path here!!!
+            ProcessBuilder gcProcess = new ProcessBuilder(cmd, circuitFile,serverInputFile,clientInputFile );
+            gcProcess.directory(new File(gcDir));
+
             Process p = gcProcess.start();
 
             p.waitFor();
@@ -34,6 +44,12 @@ public class GCTest{
             while((line = reader.readLine()) != null) {
                 System.out.println(line);
             }
+
+            GCOutAccess gcClientOut = new GCOutAccess(clientFileName);
+            GCOutAccess gcSeverOut = new GCOutAccess(serverFileName);
+            System.out.println(gcClientOut.readResult());
+            System.out.println(gcSeverOut.readResult());
+
         }
          catch (IOException e) {
             // TODO Auto-generated catch block
@@ -43,21 +59,5 @@ public class GCTest{
             e.printStackTrace();
         }
 
-
-        //ProcessBuilder pdTest = new ProcessBuilder("cal");
-        //Process pt = pdTest.start();
-
-        /*BufferedReader in = new BufferedReader(new InputStreamReader(gcProcess.getInputStream()));
-        String line;
-        while ((line = in.readLine()) != null) {
-            System.out.println(line);
-        }
-        gcProcess.waitFor();
-        System.out.println("ok!");
-
-        in.close();
-        System.exit(0);*/
-
-      //Process pro = Runtime.getRuntime().exec("/home/yi/Workspace/GCParser/runtestgcparser /home/yi/Workspace/GCParser/cmp.cir  /home/yi/Workspace/GCParser/b_side /home/yi/Workspace/GCParser/a_side");
     }
 }
