@@ -1,5 +1,5 @@
 
-import io.CreateInputFile;
+import io.CreateADDCMPInputFile;
 import io.GCOutAccess;
 
 import java.io.BufferedReader;
@@ -10,7 +10,7 @@ import java.math.BigInteger;
 
 public class GCTest{
     public static void main(String[] args) throws Exception {
-        String circuitFile = "cmp.cir";
+        String circuitFile = "ADD-CMP.cir";
         String serverInputFile = "b_side";
         String clientInputFile = "a_side";
         String cmd = "/home/yi/Workspace/CFQ/GCParser/runtestgcparser";
@@ -24,11 +24,11 @@ public class GCTest{
     private static void garbledCircuitTest(String cmd, String gcDir, String circuitFile, String serverInputFile, String clientInputFile, String clientFileName, String serverFileName) throws Exception {
         try{
 
-            CreateInputFile ciA = new CreateInputFile("a_side");
-            CreateInputFile ciB = new CreateInputFile("b_side");
+            CreateADDCMPInputFile ciA = new CreateADDCMPInputFile("a_side");
+            CreateADDCMPInputFile ciB = new CreateADDCMPInputFile("b_side");
 
-            ciA.setClientVar(BigInteger.valueOf(2220));
-            ciB.setSeverVar(BigInteger.valueOf(1248));
+            ciA.setClientVar(BigInteger.valueOf(80), BigInteger.valueOf(20));
+            ciB.setSeverVar(BigInteger.valueOf(10), BigInteger.valueOf(55));
 
 
             //must have absolute path here!!!
@@ -52,10 +52,6 @@ public class GCTest{
 
         }
          catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 

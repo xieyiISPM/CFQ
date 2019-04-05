@@ -55,15 +55,14 @@ public class SecureExactEditDistance{
                 SecureBranch sb1 = new SecureBranch(bitSize);
                 String serverOutputFile1 = null; //todo
                 String clientOutputFile1 = null;//todo
-                sb1.addAndComare(sb1.genArray(t1A,xA[i]),sb1.genArray(t1B,xB[i]), sb1.genArray(z0A, z1A), sb1.genArray(z0B, z1B),
-                        serverOutputFile1,clientOutputFile1);
+                sb1.addAndCompare(sb1.genArray(t1A,xA[i]),sb1.genArray(t1B,xB[i]), sb1.genArray(z0A, z1A), sb1.genArray(z0B, z1B));
                 BigInteger t3A = sb1.getYA();
                 BigInteger t3B = sb1.getYB();
 
                 SecureBranch sb2 = new SecureBranch(bitSize);
                 String serverOutputFile2 = null; //todo
                 String clientOutputFile2 = null; //todo
-                sb1.addAndComare(sb1.genArray(xA[i],t2A),sb1.genArray(xB[i],t2B), sb1.genArray(t3A, z1A), sb1.genArray(t3B, z1B), serverOutputFile2,clientOutputFile2);
+                sb1.addAndCompare(sb1.genArray(xA[i],t2A),sb1.genArray(xB[i],t2B), sb1.genArray(t3A, z1A), sb1.genArray(t3B, z1B));
                 BigInteger cSubA = sb2.getYA();
                 BigInteger cSubB = sb2.getYB();
 
