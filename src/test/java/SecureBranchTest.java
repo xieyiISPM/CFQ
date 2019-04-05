@@ -27,8 +27,8 @@ public class SecureBranchTest {
 
         sb.addAndCompare(xA,xB, yA, yB);
 
-        System.out.println("Ya: " + sb.getYA());
-        System.out.println("Yb: "+ sb.getYB());
+        System.out.println("YA: " + sb.getYA());
+        System.out.println("YB: "+ sb.getYB());
 
     }
     private static BigInteger[] genShares(int bitSize, BigInteger m) {

@@ -51,6 +51,15 @@ public class OnlineShuffling {
             L4[i] = ((L3[i].add(xC[i])).add(uArray[i])).mod(twoToL);
         }
         InitSet initSet = new InitSet();
+        printPi(pi);
         return initSet.permRandomArray(L4,pi);
+    }
+
+    private void printPi(int[] pi){
+        System.out.print("pi function: ");
+        for (int item: pi){
+            System.out.print(item + " ");
+        }
+        System.out.println();
     }
 }

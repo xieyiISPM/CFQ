@@ -42,9 +42,16 @@ public class SecureBranch {
         BigInteger[] xHPrime = ssf.getOfflineOutput(arraySizeX, offlineShufflingX);
         BigInteger[] xCPrime = ssf.getOnlineOuptut(arraySizeX,xA, xB,offlineShufflingX, pi );
 
+        printArr(xHPrime,"xHPrime");
+        printArr(xCPrime,"xCPrime");
+
         OfflineShuffling offlineShufflingY = new OfflineShuffling();
         BigInteger[] yHPrime = ssf.getOfflineOutput(arraySizeX, offlineShufflingY);
-        BigInteger[] yCPrime = ssf.getOnlineOuptut(arraySizeX,xA, xB,offlineShufflingY,pi );
+        BigInteger[] yCPrime = ssf.getOnlineOuptut(arraySizeX,yA, yB,offlineShufflingY,pi );
+
+        printArr(yHPrime,"yHPrime");
+        printArr(yCPrime,"yCPrime");
+
 
         CreateADDCMPInputFile ciA = new CreateADDCMPInputFile("a-input");
         CreateADDCMPInputFile ciB = new CreateADDCMPInputFile("b-input");
@@ -99,6 +106,16 @@ public class SecureBranch {
 
     public BigInteger getYB(){
         return yOutputB;
+    }
+
+    private void printArr(BigInteger[] arr, String varName){
+
+        int i = 0;
+        for(BigInteger bi: arr){
+            System.out.println(varName + " " + i + ": " + bi);
+            i++;
+        }
+        System.out.println();
     }
 
 
