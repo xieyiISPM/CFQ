@@ -5,7 +5,7 @@ import java.security.SecureRandom;
 
 public class SecureBranchTest {
     public static void main(String[] args) throws Exception{
-        int bitSize = 5;
+        int bitSize = 10;
         SecureRandom srand = new SecureRandom();
         BigInteger m = (BigInteger.TWO).pow(bitSize);
 
@@ -63,4 +63,5 @@ public class SecureBranchTest {
         BigInteger sum = (a.add(b)).mod(m);
         return sum;
     }
+
 }

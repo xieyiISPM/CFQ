@@ -71,8 +71,7 @@ public class SecureExactEditDistance{
 
                 SecureMiniSelection sms = new SecureMiniSelection(bitSize);
                 sms.getMini(sms.genArray(deltaA[i-1][j].add(cDelA), deltaA[i][j-1].add(cInA), deltaA[i-1][j-1].add(cSubA)),
-                        sms.genArray(deltaB[i-1][j].add(cDelB), deltaB[i][j-1].add(cInB), deltaB[i-1][j-1].add(cSubB)),
-                        serverOutputFile3,clientOutputFile3);
+                        sms.genArray(deltaB[i-1][j].add(cDelB), deltaB[i][j-1].add(cInB), deltaB[i-1][j-1].add(cSubB)));
                 deltaA[i][j] = sms.getMinA();
                 deltaB[i][j] = sms.getMinB();
 

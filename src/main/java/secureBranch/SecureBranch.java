@@ -1,28 +1,15 @@
 package secureBranch;
 
 import gc.GarbledCircuit;
-import io.CreateADDCMPInputFile;
-import io.GCOutAccess;
 import secureShuffle.OfflineShuffling;
 import secureShuffle.SSF;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStreamReader;
 import java.math.BigInteger;
 
 public class SecureBranch {
     private int bitSize = 10;
     private BigInteger yOutputA = null;
     private BigInteger yOutputB = null;
-
-    private String circuitFile = "ADD-CMP.cir";
-    private String serverInputFile = "b-input";
-    private String clientInputFile = "a-input";
-    private String cmd = "/home/yi/Workspace/CFQ/GCParser/runtestgcparser";
-    private String gcDir = "/home/yi/Workspace/CFQ/GCParser";
-    private String clientFileName = "GCParser/results/siclientout";
-    private String serverFileName = "GCParser/results/siserverout";
 
 
     public SecureBranch(int bitSize){
@@ -63,34 +50,11 @@ public class SecureBranch {
         System.out.println();
 
 
-        CreateADDCMPInputFile ciA = new CreateADDCMPInputFile("a-input");
-        CreateADDCMPInputFile ciB = new CreateADDCMPInputFile("b-input");
-
-        ciA.setClientVar(xHPrime[0], xCPrime[0]);
-        ciB.setSeverVar(xHPrime[1], xCPrime[1]);
-
-        //must have absolute path here!!!
-        ProcessBuilder gcProcess = new ProcessBuilder(cmd, circuitFile,serverInputFile,clientInputFile );
-        gcProcess.directory(new File(gcDir));
-
-        Process p = gcProcess.start();
-
-        p.waitFor();
-        BufferedReader reader=new BufferedReader(new InputStreamReader(
-                p.getInputStream()));
-        String line;
-        while((line = reader.readLine()) != null) {
-            System.out.println(line);
-        }
-
-        GCOutAccess gcClientOut = new GCOutAccess(clientFileName);
-        GCOutAccess gcSeverOut = new GCOutAccess(serverFileName);
-
-        int thetaClient = gcClientOut.readResult();
-        int thetaSever = gcSeverOut.readResult();
+        GarbledCircuit addcmpGC = new GarbledCircuit("ADD-CMP.cir", "b-input", "a-input", "GCParser/results/siclientout", "GCParser/results/siserverout");
+        int theta = addcmpGC.GCADDCMPOutPut(xHPrime[0], xCPrime[0], xHPrime[1], xCPrime[1]);
 
         //check which should be assigned to yOutputA/yOutputB
-        if(thetaClient==thetaSever &&  thetaClient== 1){
+        if(theta == 1){
             yOutputA = yHPrime[0];
             yOutputB = yCPrime[0];
 

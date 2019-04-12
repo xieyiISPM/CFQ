@@ -1,6 +1,7 @@
 package secureMinimumSelection;
 
 import gc.GarbledCircuit;
+import scala.math.BigInt;
 import secureShuffle.OfflineShuffling;
 import secureShuffle.SSF;
 import java.math.BigInteger;
@@ -15,7 +16,7 @@ public class SecureMiniSelection {
         this.bitSize = bitSize;
     }
 
-    public void getMini(BigInteger[] xA, BigInteger[] xB, String serverOutputFile, String clientOutputFile) throws Exception {
+    public void getMini(BigInteger[] xA, BigInteger[] xB) throws Exception {
         if(xA.length != xB.length){
             throw new IllegalArgumentException("Array sizes do not match!");
         }
@@ -28,23 +29,29 @@ public class SecureMiniSelection {
         xAPrime = ssf.getOfflineOutput(arraySize, offlineShufflingX,pi);
         xBPrime = ssf.getOnlineOuptut(arraySize,xA, xB,offlineShufflingX,pi );
 
+        System.out.print("xAPrime:");
+        printArr(xAPrime);
+        System.out.print("xBPrime: ");
+        printArr(xBPrime);
+
         BigInteger xDeltaA = xAPrime[0];
         BigInteger xDeltaB = xBPrime[0];
+       // GarbledCircuit addcmpGC = new GarbledCircuit("ADD-CMP.cir", "b-input", "a-input", "GCParser/results/siclientout", "GCParser/results/siserverout");
 
-        for (int i = 0; i< xA.length-1;i++){
-            GarbledCircuit gc = new GarbledCircuit();
-            //input file will be xDeltaA, and xPrime[i+1];
-            int theta = gc.add_cmp(serverOutputFile, clientOutputFile);
-            if(theta==1){
-                xDeltaA = xAPrime[i+1];
-                xDeltaB = xBPrime[i+1];
+        for (int i = 1; i< xA.length;i++){
+         //   int theta = addcmpGC.GCADDCMPOutPut(xDeltaA, xDeltaB, xAPrime[i], xBPrime[i]);
+            int theta = thetaHelper(xDeltaA,xDeltaB,xAPrime[i],xBPrime[i]);
+           // System.out.println("theta = "+ theta );
+
+            if(theta == 1){
+                xDeltaA = xAPrime[i];
+                xDeltaB = xBPrime[i];
+                /*System.out.println("xDeltaA: " + xDeltaA);
+                System.out.println("xDeltaB: " + xDeltaB);*/
+
             }
-
-        }
-
-        xMinA = xDeltaA;
+        }        xMinA = xDeltaA;
         xMinB = xDeltaB;
-
     }
 
     public BigInteger[] genArray(BigInteger... args){
@@ -62,6 +69,21 @@ public class SecureMiniSelection {
 
     public BigInteger getMinB(){
         return xMinB;
+    }
+
+    private void printArr(BigInteger[] arr){
+        for (BigInteger item: arr){
+            System.out.print(item + " ");
+        }
+        System.out.println();
+    }
+
+    private int thetaHelper(BigInteger xA, BigInteger xB, BigInteger yA, BigInteger yB){
+        int result = (xA.add(xB)).compareTo(yA.add(yB));
+        if(result >0){
+            return 1;
+        }
+        else return 0;
     }
 
 }
