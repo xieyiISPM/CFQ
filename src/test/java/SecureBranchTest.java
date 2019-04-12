@@ -16,11 +16,19 @@ public class SecureBranchTest {
         BigInteger[] xB  = genShares(bitSize, m);
         printArr(xB,"xB");
 
+        System.out.println("X0 reconstruct: " + reconstruct(xA[0], xB[0], bitSize));
+        System.out.println("X1 reconstruct: " + reconstruct(xA[1], xB[1], bitSize));
+        System.out.println();
+
         BigInteger[] yA  = genShares(bitSize, m);
         printArr(yA,"yA");
 
         BigInteger[] yB  = genShares(bitSize, m);
         printArr(yB,"yB");
+
+        System.out.println("y0 reconstruct: " + reconstruct(yA[0], yB[0], bitSize));
+        System.out.println("y1 reconstruct: " + reconstruct(yA[1], yB[1], bitSize));
+        System.out.println();
 
         SecureBranch sb = new SecureBranch(bitSize);
 
@@ -48,5 +56,11 @@ public class SecureBranchTest {
             i++;
         }
         System.out.println();
+    }
+
+    private static BigInteger reconstruct(BigInteger a, BigInteger b, int bitSize){
+        BigInteger m = (BigInteger.TWO).pow(bitSize);
+        BigInteger sum = (a.add(b)).mod(m);
+        return sum;
     }
 }

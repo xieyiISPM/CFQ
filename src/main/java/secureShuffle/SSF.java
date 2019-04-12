@@ -17,11 +17,10 @@ public class SSF {
         this.bitSize = bitSize;
         this.twoToL = (BigInteger.TWO).pow(bitSize);
     }
-    public BigInteger[] getOfflineOutput(int arraySize, OfflineShuffling offlineShuffling){
+    public BigInteger[] getOfflineOutput(int arraySize, OfflineShuffling offlineShuffling, int[] pi){
         BigInteger twoToL = (BigInteger.TWO).pow(bitSize);
         PaillierPrivateKey paillierPrivateKey = PaillierPrivateKey.create(1024);
         PaillierPublicKey paillierPublicKey = paillierPrivateKey.getPublicKey();
-        int[] pi = getPi(arraySize);
         BigInteger[] L0 = offlineShuffling.genL0(arraySize, bitSize, paillierPublicKey);
         BigInteger[] L1 = offlineShuffling.genL1(arraySize, bitSize, twoToL, L0, pi, paillierPublicKey);
         BigInteger[] L2 = offlineShuffling.genL2(L1, twoToL, paillierPrivateKey);

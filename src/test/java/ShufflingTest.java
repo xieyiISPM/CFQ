@@ -149,8 +149,8 @@ public class ShufflingTest {
      */
     private static String onlineShufflingTest() throws Exception{
         OfflineShuffling offlineShuffling = new OfflineShuffling();
-        int arraySize = 10000;
-        int bitSize = 510; // note  bitsize < paillier secrete factor/2
+        int arraySize = 100;
+        int bitSize = 5; // note  bitsize < paillier secrete factor/2
         BigInteger twoToL = (BigInteger.TWO).pow(bitSize);
         PaillierPrivateKey paillierPrivateKey = PaillierPrivateKey.create(1024);
         PaillierPublicKey paillierPublicKey = paillierPrivateKey.getPublicKey();
@@ -192,7 +192,7 @@ public class ShufflingTest {
         //printList(L2);
         /*System.out.println("Secret Array before sort:");
         printList(secretArray);*/
-        Arrays.parallelSort(secretArray);
+        //Arrays.parallelSort(secretArray);
 
         /*System.out.println("Secret Array after sort:");
         printList(secretArray);*/
@@ -202,18 +202,21 @@ public class ShufflingTest {
             xList[i]=xH[i].add(xC[i]).mod(twoToL);
         }
 
+        BigInteger[] xShuffledList = reorderArray(xList, pi);
+
+
         /*System.out.println("xList Array before sort:");
         printList(xList);*/
 
-        Arrays.parallelSort(xList);
+        //Arrays.parallelSort(xList);
 
         /*System.out.println("xList Array after sort:");
         printList(xList);*/
 
         for (int i = 0; i < arraySize; i++) {
 
-            if (secretArray[i].compareTo(xList[i])!=0) {
-                System.out.println(xList[i]);
+            if (secretArray[i].compareTo(xShuffledList[i])!=0) {
+                System.out.println(xShuffledList[i]);
                 return "online Test fails!";
             }
         }
@@ -249,6 +252,14 @@ public class ShufflingTest {
             System.out.println("hashCode Test fails!");
             return false;
         }
+    }
+
+    private static BigInteger[] reorderArray(BigInteger[] arr, int[] pi){
+        BigInteger[] reordered = new BigInteger[arr.length];
+        for(int i= 0; i< reordered.length; i++){
+            reordered[i] = arr[pi[i]];
+        }
+        return reordered;
     }
 
 

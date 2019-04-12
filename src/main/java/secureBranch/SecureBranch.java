@@ -39,18 +39,28 @@ public class SecureBranch {
         SSF ssf = new SSF(bitSize);
         int[] pi = ssf.getPi(arraySizeX);
         OfflineShuffling offlineShufflingX = new OfflineShuffling();
-        BigInteger[] xHPrime = ssf.getOfflineOutput(arraySizeX, offlineShufflingX);
+        BigInteger[] xHPrime = ssf.getOfflineOutput(arraySizeX, offlineShufflingX, pi);
         BigInteger[] xCPrime = ssf.getOnlineOuptut(arraySizeX,xA, xB,offlineShufflingX, pi );
 
         printArr(xHPrime,"xHPrime");
         printArr(xCPrime,"xCPrime");
 
+        System.out.println("X0Prime reconstruct: " + reconstruct(xHPrime[0], xCPrime[0], bitSize));
+        System.out.println("X1Prime reconstruct: " + reconstruct(xHPrime[1], xCPrime[1], bitSize));
+        System.out.println();
+
+
+
         OfflineShuffling offlineShufflingY = new OfflineShuffling();
-        BigInteger[] yHPrime = ssf.getOfflineOutput(arraySizeX, offlineShufflingY);
+        BigInteger[] yHPrime = ssf.getOfflineOutput(arraySizeX, offlineShufflingY,pi);
         BigInteger[] yCPrime = ssf.getOnlineOuptut(arraySizeX,yA, yB,offlineShufflingY,pi );
 
         printArr(yHPrime,"yHPrime");
         printArr(yCPrime,"yCPrime");
+
+        System.out.println("y0Prime reconstruct: " + reconstruct(yHPrime[0], yCPrime[0], bitSize));
+        System.out.println("y1Prime reconstruct: " + reconstruct(yHPrime[1], yCPrime[1], bitSize));
+        System.out.println();
 
 
         CreateADDCMPInputFile ciA = new CreateADDCMPInputFile("a-input");
@@ -116,6 +126,12 @@ public class SecureBranch {
             i++;
         }
         System.out.println();
+    }
+
+    private  BigInteger reconstruct(BigInteger a, BigInteger b, int bitSize){
+        BigInteger m = (BigInteger.TWO).pow(bitSize);
+        BigInteger sum = (a.add(b)).mod(m);
+        return sum;
     }
 
 

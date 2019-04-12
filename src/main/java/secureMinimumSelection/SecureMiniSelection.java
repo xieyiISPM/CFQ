@@ -25,7 +25,7 @@ public class SecureMiniSelection {
         int[] pi = ssf.getPi(arraySize);
 
         OfflineShuffling offlineShufflingX = new OfflineShuffling();
-        xAPrime = ssf.getOfflineOutput(arraySize, offlineShufflingX);
+        xAPrime = ssf.getOfflineOutput(arraySize, offlineShufflingX,pi);
         xBPrime = ssf.getOnlineOuptut(arraySize,xA, xB,offlineShufflingX,pi );
 
         BigInteger xDeltaA = xAPrime[0];
