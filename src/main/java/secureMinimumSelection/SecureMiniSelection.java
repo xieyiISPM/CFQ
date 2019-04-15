@@ -29,10 +29,10 @@ public class SecureMiniSelection {
         xAPrime = ssf.getOfflineOutput(arraySize, offlineShufflingX,pi);
         xBPrime = ssf.getOnlineOuptut(arraySize,xA, xB,offlineShufflingX,pi );
 
-        System.out.print("xAPrime:");
+        /*System.out.print("xAPrime:");
         printArr(xAPrime);
         System.out.print("xBPrime: ");
-        printArr(xBPrime);
+        printArr(xBPrime);*/
 
         BigInteger xDeltaA = xAPrime[0];
         BigInteger xDeltaB = xBPrime[0];
@@ -50,7 +50,8 @@ public class SecureMiniSelection {
                 System.out.println("xDeltaB: " + xDeltaB);
 */
             }
-        }        xMinA = xDeltaA;
+        }
+        xMinA = xDeltaA;
         xMinB = xDeltaB;
     }
 

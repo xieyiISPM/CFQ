@@ -28,13 +28,13 @@ public class SecureBranch {
         OfflineShuffling offlineShufflingX = new OfflineShuffling();
         BigInteger[] xHPrime = ssf.getOfflineOutput(arraySizeX, offlineShufflingX, pi);
         BigInteger[] xCPrime = ssf.getOnlineOuptut(arraySizeX,xA, xB,offlineShufflingX, pi );
-
+/*
         printArr(xHPrime,"xHPrime");
         printArr(xCPrime,"xCPrime");
 
         System.out.println("X0Prime reconstruct: " + reconstruct(xHPrime[0], xCPrime[0], bitSize));
         System.out.println("X1Prime reconstruct: " + reconstruct(xHPrime[1], xCPrime[1], bitSize));
-        System.out.println();
+        System.out.println();*/
 
 
 
@@ -42,12 +42,12 @@ public class SecureBranch {
         BigInteger[] yHPrime = ssf.getOfflineOutput(arraySizeX, offlineShufflingY,pi);
         BigInteger[] yCPrime = ssf.getOnlineOuptut(arraySizeX,yA, yB,offlineShufflingY,pi );
 
-        printArr(yHPrime,"yHPrime");
+       /* printArr(yHPrime,"yHPrime");
         printArr(yCPrime,"yCPrime");
 
         System.out.println("y0Prime reconstruct: " + reconstruct(yHPrime[0], yCPrime[0], bitSize));
         System.out.println("y1Prime reconstruct: " + reconstruct(yHPrime[1], yCPrime[1], bitSize));
-        System.out.println();
+        System.out.println();*/
 
 
        // GarbledCircuit addcmpGC = new GarbledCircuit("ADD-CMP.cir", "b-input", "a-input", "GCParser/results/siclientout", "GCParser/results/siserverout");
@@ -55,7 +55,7 @@ public class SecureBranch {
 
         int theta = thetaHelper(xHPrime[0], xCPrime[0], xHPrime[1], xCPrime[1]);
         //check which should be assigned to yOutputA/yOutputB
-        System.out.println("theta = "+ theta);
+       // System.out.println("theta = "+ theta);
         if(theta == 1){
             yOutputA = yHPrime[0];
             yOutputB = yCPrime[0];

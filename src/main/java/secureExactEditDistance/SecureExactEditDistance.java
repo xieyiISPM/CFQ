@@ -76,8 +76,8 @@ public class SecureExactEditDistance{
             }
         }
         //check boundary array index;
-        dEDA = deltaA[n1-1][n2-1];
-        dEDB = deltaB[n2-1][n2-1];
+        dEDA = deltaA[n1][n2];
+        dEDB = deltaB[n2][n2];
     }
 
     public BigInteger getDedA(){
