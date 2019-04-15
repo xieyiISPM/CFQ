@@ -41,14 +41,14 @@ public class SecureMiniSelection {
         for (int i = 1; i< xA.length;i++){
          //   int theta = addcmpGC.GCADDCMPOutPut(xDeltaA, xDeltaB, xAPrime[i], xBPrime[i]);
             int theta = thetaHelper(xDeltaA,xDeltaB,xAPrime[i],xBPrime[i]);
-           // System.out.println("theta = "+ theta );
+            //System.out.println("theta = "+ theta );
 
             if(theta == 1){
                 xDeltaA = xAPrime[i];
                 xDeltaB = xBPrime[i];
-                /*System.out.println("xDeltaA: " + xDeltaA);
-                System.out.println("xDeltaB: " + xDeltaB);*/
-
+               /* System.out.println("xDeltaA: " + xDeltaA);
+                System.out.println("xDeltaB: " + xDeltaB);
+*/
             }
         }        xMinA = xDeltaA;
         xMinB = xDeltaB;
@@ -79,7 +79,7 @@ public class SecureMiniSelection {
     }
 
     private int thetaHelper(BigInteger xA, BigInteger xB, BigInteger yA, BigInteger yB){
-        int result = (xA.add(xB)).compareTo(yA.add(yB));
+        int result = (xA.add(xB).mod((BigInteger.TWO).pow(bitSize))).compareTo(yA.add(yB).mod((BigInteger.TWO).pow(bitSize)));
         if(result >0){
             return 1;
         }

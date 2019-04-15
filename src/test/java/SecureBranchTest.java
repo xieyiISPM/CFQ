@@ -5,7 +5,7 @@ import java.security.SecureRandom;
 
 public class SecureBranchTest {
     public static void main(String[] args) throws Exception{
-        int bitSize = 10;
+        int bitSize = 5;
         SecureRandom srand = new SecureRandom();
         BigInteger m = (BigInteger.TWO).pow(bitSize);
 
@@ -37,6 +37,7 @@ public class SecureBranchTest {
 
         System.out.println("YA: " + sb.getYA());
         System.out.println("YB: "+ sb.getYB());
+        System.out.println("y = "+ sb.getYA().add(sb.getYB()).mod(m));
 
     }
     private static BigInteger[] genShares(int bitSize, BigInteger m) {

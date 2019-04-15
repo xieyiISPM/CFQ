@@ -30,13 +30,16 @@
             <version>1.60</version>
         </dependency>
 
-        <!--This dependency provides the public API for writing tests and extensions-->
+
+        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.4.0</version>
+            <version>5.4.1</version>
             <scope>test</scope>
         </dependency>
+
+
 
         <dependency>
             <groupId>net.sf.ntru</groupId>

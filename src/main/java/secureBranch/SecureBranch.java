@@ -50,10 +50,12 @@ public class SecureBranch {
         System.out.println();
 
 
-        GarbledCircuit addcmpGC = new GarbledCircuit("ADD-CMP.cir", "b-input", "a-input", "GCParser/results/siclientout", "GCParser/results/siserverout");
-        int theta = addcmpGC.GCADDCMPOutPut(xHPrime[0], xCPrime[0], xHPrime[1], xCPrime[1]);
+       // GarbledCircuit addcmpGC = new GarbledCircuit("ADD-CMP.cir", "b-input", "a-input", "GCParser/results/siclientout", "GCParser/results/siserverout");
+        //int theta = addcmpGC.GCADDCMPOutPut(xHPrime[0], xCPrime[0], xHPrime[1], xCPrime[1]);
 
+        int theta = thetaHelper(xHPrime[0], xCPrime[0], xHPrime[1], xCPrime[1]);
         //check which should be assigned to yOutputA/yOutputB
+        System.out.println("theta = "+ theta);
         if(theta == 1){
             yOutputA = yHPrime[0];
             yOutputB = yCPrime[0];
@@ -96,6 +98,14 @@ public class SecureBranch {
         BigInteger m = (BigInteger.TWO).pow(bitSize);
         BigInteger sum = (a.add(b)).mod(m);
         return sum;
+    }
+
+    private int thetaHelper(BigInteger xA, BigInteger xB, BigInteger yA, BigInteger yB){
+        int result = (xA.add(xB).mod((BigInteger.TWO).pow(bitSize))).compareTo(yA.add(yB).mod((BigInteger.TWO).pow(bitSize)));
+        if(result >0){
+            return 1;
+        }
+        else return 0;
     }
 
 

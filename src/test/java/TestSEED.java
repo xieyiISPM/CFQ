@@ -1,29 +1,21 @@
 import org.junit.jupiter.api.Test;
-import secureMinimumSelection.SecureMiniSelection;
+import secureExactEditDistance.SecureExactEditDistance;
 import secureShuffle.InitSet;
 
 import java.math.BigInteger;
 
-public class SecureMiniTest {
-    /*public static void main(String[] args) throws Exception{
-        int arraySize = 10;
-        int bitSize = 5; // note  bitsize < paillier secrete factor/2
-        InitSet initSet = new InitSet();
-        BigInteger[] xH = initSet.genRandomArray(arraySize, bitSize);
-        BigInteger[] xC = initSet.genRandomArray(arraySize, bitSize);
-        secureMiniTest(xC,xH, bitSize);
-
-
-    }*/
-
-    //private static void secureMiniTest(BigInteger[] xA, BigInteger[] xB, int bitSize) throws Exception{
+public class TestSEED {
     @Test
-    void testSecureMini() throws Exception{
+    void testSEED() throws Exception{
         int arraySize = 10;
         int bitSize = 5; // note  bitsize < paillier secrete factor/2
         InitSet initSet = new InitSet();
         BigInteger[] xB = initSet.genRandomArray(arraySize, bitSize);
         BigInteger[] xA = initSet.genRandomArray(arraySize, bitSize);
+
+        BigInteger[] yB = initSet.genRandomArray(arraySize, bitSize);
+        BigInteger[] yA = initSet.genRandomArray(arraySize, bitSize);
+
         BigInteger twoToL = (BigInteger.TWO).pow(bitSize);
 
         System.out.print("xA: ");
@@ -35,13 +27,22 @@ public class SecureMiniTest {
         printArr(reconstruct(xA,xB,twoToL));
         System.out.println();
 
-        SecureMiniSelection sm = new SecureMiniSelection(bitSize);
-        sm.getMini(xA, xB);
-        System.out.println();
-        System.out.println("mininum A = "+sm.getMinA());
-        System.out.println("mininum B = "+sm.getMinB());
-        System.out.println("reconstructed mini = " + sm.getMinA().add(sm.getMinB()).mod(twoToL));
+        System.out.print("yA: ");
+        printArr(yA);
+        System.out.print("yB: ");
+        printArr(yB);
 
+        System.out.print("y: ");
+        printArr(reconstruct(yA,yB,twoToL));
+        System.out.println();
+
+        SecureExactEditDistance seed = new SecureExactEditDistance(bitSize);
+        seed.setDistance(xA, xB, yA, yB);
+
+        System.out.println();
+        System.out.println("dED_A = "+seed.getDedA());
+        System.out.println("dED_B = "+seed.getDedB());
+        System.out.println("reconstructed dED = " + seed.getDedA().add(seed.getDedB()).mod(twoToL));
 
     }
 
@@ -63,4 +64,6 @@ public class SecureMiniTest {
         }
         return sum;
     }
+
+
 }
