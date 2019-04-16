@@ -71,7 +71,7 @@ public class TopKQuery {
         }
     }
 
-    public void getTopKIndexDistTuple(int k){
+    public void genTopKIndexDistTuple(int k){
         deltaC = new BigInteger[m][2];
         deltaH = new BigInteger[m][2];
 
@@ -85,11 +85,26 @@ public class TopKQuery {
         for(int i= 0; i< k;i++){
             for(int j= m; j>= i; j--){
                 int theta = thetaHelper(deltaC[j][1], deltaH[j][1], deltaC[j-1][1], deltaH[j-1][1]);
-                if (theta==0) {
-                    swap(deltaC[j][0], deltaC[j-1][0]);
-                    swap(deltaH[j][0], deltaH[j-1][0]);
-                    swap(deltaC[j][1], deltaC[j-1][1]);
-                    swap(deltaH[j][1], deltaH[j-1][1]);
+                if(theta==0) {
+                    /**
+                     * Java pass by value, therefore, I can not create a method to do swap
+                     */
+                   BigInteger temp;
+                   temp = deltaC[j][0];
+                   deltaC[j-1][0] = deltaC[j][0];
+                   deltaC[j][0]= temp;
+
+                   temp = deltaH[j][0];
+                   deltaH[j-1][0] = deltaH[j][0];
+                   deltaH[j][0]= temp;
+
+                    temp = deltaC[j][1];
+                    deltaC[j-1][1] = deltaC[j][1];
+                    deltaC[j][1]= temp;
+
+                    temp = deltaH[j][1];
+                    deltaH[j-1][1] = deltaH[j][1];
+                    deltaH[j][1]= temp;
                 }
 
             }
@@ -128,13 +143,6 @@ public class TopKQuery {
         else return 0;
     }
 
-    private void swap(BigInteger bigA, BigInteger bigB){
-        BigInteger temp;
-        temp = bigA;
-        bigA = bigB;
-        bigB = temp;
-
-    }
 
 
 
