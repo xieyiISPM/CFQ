@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class TestTopKQuery {
     @Test
     void testSwap(){
-        int bitSize = 5;
+        int bitSize = 10;
         TopKQuery topK = new TopKQuery(bitSize);
         BigInteger bigA = BigInteger.valueOf(21);
         BigInteger bigB = BigInteger.valueOf(32);
@@ -27,9 +27,10 @@ public class TestTopKQuery {
 
     @Test
     void testSecureQueryPreCompute() throws Exception{
-        int bitSize = 5;
-        int records = 2;
-        int arraySize = 5;
+        int bitSize = 10;
+        int records = 10;
+        int arraySize = 15;
+        int k = 7;
         ArrayList<Triple<BigInteger, BigInteger,BigInteger>> bigTripleQShare = genShares(bitSize, arraySize);
         BigInteger[] QA = new BigInteger[arraySize];
         BigInteger[] QB = new BigInteger[arraySize];
@@ -81,10 +82,46 @@ public class TestTopKQuery {
             printArr(SB[i]);
 
         }
-        SSF ssf = new SSF(bitSize);
-        int[] pi = ssf.getPi(arraySize);
+
         TopKQuery topKQuery = new TopKQuery(bitSize);
-        topKQuery.secureQueryPreCompute(QA,SA,QB,SB, pi);
+        topKQuery.secureQueryPreCompute(QA,SA,QB,SB);
+        topKQuery.genTopKIndexDistTuple(k);
+
+        Pair<BigInteger, BigInteger>[] indexAndDistH = topKQuery.getIndexDistTupleH();
+        Pair<BigInteger, BigInteger>[] indexAndDistC = topKQuery.getIndexDistTupleC();
+
+        BigInteger[] reconstructedIndex = new BigInteger[indexAndDistC.length];
+        BigInteger[] reconstructedDist = new BigInteger[indexAndDistC.length];
+
+        for (int i = 0; i< indexAndDistC.length;i++){
+            reconstructedIndex[i] = reconstruct(indexAndDistC[i].getLeft(), indexAndDistH[i].getLeft(), bitSize);
+            reconstructedDist[i] = reconstruct(indexAndDistC[i].getRight(), indexAndDistH[i].getRight(), bitSize);
+        }
+
+        System.out.println("Reconstructed Index: ");
+        printArr(reconstructedIndex);
+        System.out.println("reconstructed Distance: ");
+        printArr(reconstructedDist);
+
+        topKQuery.genTopKIndexDistTuple(k);
+
+        Pair<BigInteger, BigInteger>[] kIndexAndDistH = topKQuery.getTopKPairH();
+        Pair<BigInteger, BigInteger>[] kIndexAndDistC = topKQuery.getTopKPairC();
+
+        BigInteger[] reconstructedTopKIndex = new BigInteger[kIndexAndDistC.length];
+        BigInteger[] reconstructedTopKDist = new BigInteger[kIndexAndDistC.length];
+
+        for (int i = 0; i< kIndexAndDistC.length;i++){
+            reconstructedTopKIndex[i] = reconstruct(kIndexAndDistC[i].getLeft(), kIndexAndDistH[i].getLeft(), bitSize);
+            reconstructedTopKDist[i] = reconstruct(kIndexAndDistC[i].getRight(), kIndexAndDistH[i].getRight(), bitSize);
+        }
+
+        System.out.println("Reconstructed Top k = "+ k + " Index: ");
+        printArr(reconstructedTopKIndex);
+        System.out.println("reconstructed Distance: ");
+        printArr(reconstructedTopKDist);
+
+
 
 
     }
@@ -104,11 +141,16 @@ public class TestTopKQuery {
         return bigTripleArray;
     }
 
-    private static void printArr(BigInteger[] arr){
+    private void printArr(BigInteger[] arr){
 
         for(BigInteger bi: arr){
             System.out.print( bi + " ");
         }
         System.out.println();
+    }
+
+    private BigInteger reconstruct(BigInteger bigA, BigInteger bigB, int bitSize){
+        BigInteger twoToL = BigInteger.TWO.pow(bitSize);
+        return bigA.add(bigB).mod(twoToL);
     }
 }

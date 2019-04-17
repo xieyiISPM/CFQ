@@ -28,7 +28,7 @@ public class TopKQuery {
         this.twoToL = BigInteger.TWO.pow(bitSize);
     }
 
-    public void secureQueryPreCompute(BigInteger[] QA, BigInteger[][] SA, BigInteger[] QB, BigInteger[][] SB, int[] pi) throws Exception{
+    public void secureQueryPreCompute(BigInteger[] QA, BigInteger[][] SA, BigInteger[] QB, BigInteger[][] SB) throws Exception{
         this.m = SA.length; //row length
         this.n = SA[0].length; //column length
 
@@ -50,19 +50,22 @@ public class TopKQuery {
         BigInteger[] indexB  = new BigInteger[m];
         for (int i= 0; i< m; i++){
             indexA[i] = BigInteger.valueOf(i).mod(twoToL);
-            indexB[i] = BigInteger.valueOf(i).mod(twoToL);
+            indexB[i] = BigInteger.valueOf(0).mod(twoToL);
         }
 
-        int arraySize = n;
         SSF ssf = new SSF(bitSize);
+
+        int indexArraySize = indexA.length;
+        int[] pi = ssf.getPi(indexArraySize);
+
         OfflineShuffling offlineShufflingIndex = new OfflineShuffling();
         OfflineShuffling offlineShufflingDist = new OfflineShuffling();
 
-        BigInteger[] indexHPrime = ssf.getOfflineOutput(arraySize, offlineShufflingIndex, pi);
-        BigInteger[] distHPrime = ssf.getOfflineOutput(arraySize,offlineShufflingDist,pi);
+        BigInteger[] indexHPrime = ssf.getOfflineOutput(indexArraySize, offlineShufflingIndex, pi);
+        BigInteger[] distHPrime = ssf.getOfflineOutput(indexArraySize,offlineShufflingDist,pi);
 
-        BigInteger[] indexCPrime = ssf.getOnlineOuptut(arraySize,indexA, indexB, offlineShufflingIndex, pi);
-        BigInteger[] distCPrime = ssf.getOnlineOuptut(arraySize, dEDA,dEDB,offlineShufflingDist,pi);
+        BigInteger[] indexCPrime = ssf.getOnlineOuptut(indexArraySize,indexA, indexB, offlineShufflingIndex, pi);
+        BigInteger[] distCPrime = ssf.getOnlineOuptut(indexArraySize, dEDA,dEDB,offlineShufflingDist,pi);
 
 
         for(int i = 0; i< m; i++){
@@ -72,6 +75,10 @@ public class TopKQuery {
     }
 
     public void genTopKIndexDistTuple(int k){
+        if(k> m){
+            System.out.println("k is larger than total records of database");
+            throw new IndexOutOfBoundsException();
+        }
         deltaC = new BigInteger[m][2];
         deltaH = new BigInteger[m][2];
 
@@ -82,33 +89,36 @@ public class TopKQuery {
             deltaH[i][1]= indexDistTupleH[i].getRight();
         }
 
-        for(int i= 0; i< k;i++){
-            for(int j= m; j>= i; j--){
+        //check bubble sort !!!!
+        for(int i= 1; i<= k;i++){
+            for(int j= m-1; j>= i; j--){
                 int theta = thetaHelper(deltaC[j][1], deltaH[j][1], deltaC[j-1][1], deltaH[j-1][1]);
                 if(theta==0) {
                     /**
                      * Java pass by value, therefore, I can not create a method to do swap
                      */
                    BigInteger temp;
-                   temp = deltaC[j][0];
+                   temp = deltaC[j-1][0];
                    deltaC[j-1][0] = deltaC[j][0];
                    deltaC[j][0]= temp;
 
-                   temp = deltaH[j][0];
+                   temp = deltaH[j-1][0];
                    deltaH[j-1][0] = deltaH[j][0];
                    deltaH[j][0]= temp;
 
-                    temp = deltaC[j][1];
+                    temp = deltaC[j-1][1];
                     deltaC[j-1][1] = deltaC[j][1];
                     deltaC[j][1]= temp;
 
-                    temp = deltaH[j][1];
+                    temp = deltaH[j-1][1];
                     deltaH[j-1][1] = deltaH[j][1];
                     deltaH[j][1]= temp;
                 }
 
             }
         }
+        kIndexDistTupleH = new Pair[k];
+        kIndexDistTupleC = new Pair[k];
 
         for (int i = 0; i < k; i++){
             kIndexDistTupleH[i]= new ImmutablePair(deltaH[i][0], deltaH[i][1]);
