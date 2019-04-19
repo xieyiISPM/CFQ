@@ -1,20 +1,13 @@
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.ImmutableTriple;
+import helper.Helper;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 import org.junit.jupiter.api.Test;
-import secureShuffle.SSF;
 import topkQuery.TopKQuery;
 
 import java.math.BigInteger;
-import java.security.SecureRandom;
-import java.util.ArrayList;
 
 public class TestTopKQuery {
     @Test
     void testSwap(){
-        int bitSize = 10;
-        TopKQuery topK = new TopKQuery(bitSize);
         BigInteger bigA = BigInteger.valueOf(21);
         BigInteger bigB = BigInteger.valueOf(32);
         BigInteger temp;
@@ -29,57 +22,46 @@ public class TestTopKQuery {
     void testSecureQueryPreCompute() throws Exception{
         int bitSize = 10;
         int records = 10;
-        int arraySize = 15;
-        int k = 7;
-        ArrayList<Triple<BigInteger, BigInteger,BigInteger>> bigTripleQShare = genShares(bitSize, arraySize);
-        BigInteger[] QA = new BigInteger[arraySize];
-        BigInteger[] QB = new BigInteger[arraySize];
-        BigInteger[] Q = new BigInteger[arraySize];
+        int arraySize = 6;
+        int k = 5;
 
-        for(int i=0; i< arraySize;i++ ){
-            QA[i]= bigTripleQShare.get(i).getLeft();
-            QB[i]= bigTripleQShare.get(i).getRight();
-            Q[i]= bigTripleQShare.get(i).getMiddle();
-        }
+        Helper helper = new Helper(bitSize);
+        helper.genQuery(arraySize);
+        BigInteger[] QA = helper.getQueryA();
+        BigInteger[] QB = helper.getQueryB();
+        BigInteger[] Q = helper.getOriginalQuery();
+
 
         System.out.print("Original: ");
-        printArr(Q);
+        helper.printArr(Q);
         System.out.print("QA: ");
-        printArr(QA);
+        helper.printArr(QA);
         System.out.print("QB: ");
-        printArr(QB);
+        helper.printArr(QB);
 
-        BigInteger[][] SA = new BigInteger[records][arraySize];
-        BigInteger[][] SB = new BigInteger[records][arraySize];
-        BigInteger[][] S = new BigInteger[records][arraySize];
+        helper.genGS(arraySize, records);
+        BigInteger[][] SA = helper.getGSA();
+        BigInteger[][] SB = helper.getGSB();
+        BigInteger[][] S = helper.getOriginalGS();
 
-        for(int i= 0; i< records; i++){
-            ArrayList<Triple<BigInteger, BigInteger,BigInteger>> bigTripleSShare = genShares(bitSize, arraySize);
-
-            for(int j=0; j< arraySize;j++){
-                SA[i][j] = bigTripleSShare.get(j).getLeft();
-                S[i][j] = bigTripleSShare.get(j).getMiddle();
-                SB[i][j] = bigTripleSShare.get(j).getRight();
-            }
-        }
         System.out.println("S:");
         for(int i= 0; i< records;i++){
             System.out.print("record-"+ i + ": ");
-            printArr(S[i]);
+            helper.printArr(S[i]);
 
         }
 
         System.out.println("SA:");
         for(int i= 0; i< records;i++){
             System.out.print("record-"+ i + ": ");
-            printArr(SA[i]);
+            helper.printArr(SA[i]);
 
         }
 
         System.out.println("SB:");
         for(int i= 0; i< records;i++){
             System.out.print("record-"+ i + ": ");
-            printArr(SB[i]);
+            helper.printArr(SB[i]);
 
         }
 
@@ -94,14 +76,14 @@ public class TestTopKQuery {
         BigInteger[] reconstructedDist = new BigInteger[indexAndDistC.length];
 
         for (int i = 0; i< indexAndDistC.length;i++){
-            reconstructedIndex[i] = reconstruct(indexAndDistC[i].getLeft(), indexAndDistH[i].getLeft(), bitSize);
-            reconstructedDist[i] = reconstruct(indexAndDistC[i].getRight(), indexAndDistH[i].getRight(), bitSize);
+            reconstructedIndex[i] = helper.reconstruct(indexAndDistC[i].getLeft(), indexAndDistH[i].getLeft(), bitSize);
+            reconstructedDist[i] = helper.reconstruct(indexAndDistC[i].getRight(), indexAndDistH[i].getRight(), bitSize);
         }
 
         System.out.println("Reconstructed Index: ");
-        printArr(reconstructedIndex);
+        helper.printArr(reconstructedIndex);
         System.out.println("reconstructed Distance: ");
-        printArr(reconstructedDist);
+        helper.printArr(reconstructedDist);
 
         topKQuery.genTopKIndexDistTuple(k);
 
@@ -112,36 +94,19 @@ public class TestTopKQuery {
         BigInteger[] reconstructedTopKDist = new BigInteger[kIndexAndDistC.length];
 
         for (int i = 0; i< kIndexAndDistC.length;i++){
-            reconstructedTopKIndex[i] = reconstruct(kIndexAndDistC[i].getLeft(), kIndexAndDistH[i].getLeft(), bitSize);
-            reconstructedTopKDist[i] = reconstruct(kIndexAndDistC[i].getRight(), kIndexAndDistH[i].getRight(), bitSize);
+            reconstructedTopKIndex[i] = helper.reconstruct(kIndexAndDistC[i].getLeft(), kIndexAndDistH[i].getLeft(), bitSize);
+            reconstructedTopKDist[i] = helper.reconstruct(kIndexAndDistC[i].getRight(), kIndexAndDistH[i].getRight(), bitSize);
         }
 
         System.out.println("Reconstructed Top k = "+ k + " Index: ");
-        printArr(reconstructedTopKIndex);
+        helper.printArr(reconstructedTopKIndex);
         System.out.println("reconstructed Distance: ");
-        printArr(reconstructedTopKDist);
-
-
-
+        helper.printArr(reconstructedTopKDist);
 
     }
 
-    private ArrayList<Triple<BigInteger, BigInteger,BigInteger>> genShares(int bitSize, int arraySize) {
-        SecureRandom srand = new SecureRandom();
-        BigInteger[] arr = new BigInteger[2];
-        BigInteger m = BigInteger.TWO.pow(bitSize);
 
-        ArrayList<Triple<BigInteger, BigInteger, BigInteger>> bigTripleArray = new ArrayList<>();
-        for(int i=0; i< arraySize; i++){
-            BigInteger sum = new BigInteger(bitSize, srand);
-            arr[0] = new BigInteger(bitSize, srand);
-            arr[1] = (sum.subtract(arr[0])).mod(m);
-            bigTripleArray.add(new ImmutableTriple(arr[0], sum, arr[1]));
-        }
-        return bigTripleArray;
-    }
-
-    private void printArr(BigInteger[] arr){
+    /*private void printArr(BigInteger[] arr){
 
         for(BigInteger bi: arr){
             System.out.print( bi + " ");
@@ -152,5 +117,5 @@ public class TestTopKQuery {
     private BigInteger reconstruct(BigInteger bigA, BigInteger bigB, int bitSize){
         BigInteger twoToL = BigInteger.TWO.pow(bitSize);
         return bigA.add(bigB).mod(twoToL);
-    }
+    }*/
 }
