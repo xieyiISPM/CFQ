@@ -22,16 +22,33 @@ public class SecureCompare {
     }*/
     public int secureCompare(BigInteger distHa, BigInteger distCa, BigInteger distHb, BigInteger distCb){
         Random srand = new SecureRandom();
-        BigInteger r = new BigInteger(bitSize,srand);
+        int testTimes = 3;
+        BigInteger[] r = new BigInteger[testTimes];
+        int[] result = new int[testTimes];
+        for(int i = 0; i<testTimes; i++){
+            r[i] = new BigInteger((bitSize *(i+1))/testTimes, srand);
+            //C generate rA
+            BigInteger blindedCa = blindedDist(distCa,r[i] );
+            //C generate rB
+            BigInteger blindedCb = blindedDist(distCb,r[i] );
+            //Ha generate distPrime
+            BigInteger distHaPrime = genDistPrime(distHa, blindedCa);
+            BigInteger distHbPrime = genDistPrime(distHb, blindedCb);
+            result[i]= distHaPrime.compareTo(distHbPrime);
 
-        //C generate rA
-        BigInteger blindedCa = blindedDist(distCa,r );
-        //C generate rB
-        BigInteger blindedCb = blindedDist(distCb,r );
-        //Ha generate distPrime
-        BigInteger distHaPrime = genDistPrime(distHa, blindedCa);
-        BigInteger distHbPrime = genDistPrime(distHb, blindedCb);
+        }
+        int voteResult= 0;
+        for(int i = 0; i < testTimes; i++){
+            voteResult = result[i] + voteResult;
+        }
 
+        if (voteResult > 0 ){
+            return 1;
+        }
+        else if(voteResult ==0){
+            return 0;
+        }
+        else return -1;
 
         /*System.out.print("random r:");
         System.out.println(r);*/
@@ -39,9 +56,6 @@ public class SecureCompare {
         System.out.println(distHaPrime);
         System.out.print("distHbPrime: ");
         System.out.println(distHbPrime);*/
-
-
-        return distHaPrime.compareTo(distHbPrime);
     }
 
     private BigInteger blindedDist(BigInteger dist, BigInteger r){

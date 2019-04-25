@@ -21,9 +21,9 @@ public class TestTopKQuery {
     @Test
     void testSecureQueryPreCompute() throws Exception{
         int bitSize = 10;
-        int records = 10;
+        int records = 3;
         int arraySize = 6;
-        int k = 5;
+        int k = 2;
 
         Helper helper = new Helper(bitSize);
         helper.genQuery(arraySize);

@@ -1,14 +1,14 @@
 package helper;
 
-import org.apache.commons.lang3.builder.ToStringExclude;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 
-public class Helper {
+public class Helper <T> {
     private int bitSize;
     private BigInteger twoToL;
     private Triple<BigInteger[], BigInteger[], BigInteger[]> query;
@@ -148,5 +148,42 @@ public class Helper {
     public BigInteger reconstruct(BigInteger bigA, BigInteger bigB, int bitSize){
         BigInteger twoToL = BigInteger.TWO.pow(bitSize);
         return bigA.add(bigB).mod(twoToL);
+    }
+
+    public void GSRecordsPrinter(T[][] GS){
+        if(GS==null){
+            System.out.println("null records!");
+        }
+        for(T[] record: GS ){
+            printArr((BigInteger[])record);
+        }
+
+    }
+
+    public void GSOriginalPrinter(T[][] GS){
+        if(GS==null){
+            System.out.println("null records!");
+        }
+        for(T[] record: GS ){
+            printArr((BigInteger[])record);
+        }
+
+    }
+
+    public void printSingleIndexDistancePair(Pair<T, T> indexDistancePair){
+        System.out.print(indexDistancePair.getLeft() + " " + indexDistancePair.getRight());
+    }
+
+    public void printAllIndexDistancePair(Pair<T,T>[] indexDistanceArr){
+        System.out.println("Index:");
+        for(Pair<T, T> indexDistancePair : indexDistanceArr){
+            System.out.print(indexDistancePair.getLeft() + " ");
+        }
+        System.out.println();
+        System.out.println("Distance:");
+        for(Pair<T, T> indexDistancePair : indexDistanceArr){
+            System.out.print(indexDistancePair.getRight() + " ");
+        }
+        System.out.println();
     }
 }

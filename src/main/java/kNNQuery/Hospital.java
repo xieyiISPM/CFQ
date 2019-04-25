@@ -1,19 +1,26 @@
 package kNNQuery;
 
+import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Stack;
+
 
 public class Hospital<T> {
-    private ArrayList<T[]> GS = new ArrayList<>();
+    private T[][] GS;
     private T[] query;
 
-    private ArrayList<Pair<T, T>> indexDistancePairList = new ArrayList<>() ;
-    private BigInteger winInfo;
+    private Pair<T, T>[] indexDistancePairList ;
+    private Stack<Pair<T,T>> indexDistancePairStack = new Stack<>();
+    //private BigInteger winInfo;
+    private ArrayList<Triple<Integer, Integer, Boolean>> indexOrderIsWinList = new ArrayList<>();
+    private ArrayList<Triple<T, Integer, Integer>> finalResultsList = new ArrayList<>(); //index of database, hospitalID, finalOrder)
+    private int hospitalID;
 
-    public Hospital() {
-
+    public Hospital(int hospitalID) {
+        this.hospitalID = hospitalID;
     }
 
     public void addQuery(T[] query){
@@ -21,47 +28,83 @@ public class Hospital<T> {
     }
 
     public void addAllSequenceData(T[][] S) {
-        for (int i = 0; i < S.length; i++) {
-            this.GS.add(S[i]);
-        }
+            this.GS=S;
     }
 
-    public void addSequenceDate(T[] data) {
-        this.GS.add(data);
-    }
 
     public T[] getSequenceData(int index) {
-        return GS.get(index);
+        return GS[index];
     }
 
-    public void addAllIndexDistancePair(Pair<T, T>[] indexDistancePairArray) {
-        for (Pair<T, T> element : indexDistancePairArray) {
-            this.indexDistancePairList.add(element);
-        }
+    public void addTopKIndexDistancePair(Pair<T, T>[] indexDistancePairArray) {
+            this.indexDistancePairList=indexDistancePairArray;
+            for(int i= indexDistancePairArray.length-1; i>= 0; i--){
+                indexDistancePairStack.push(indexDistancePairArray[i]);
+            }
     }
 
     public Pair<T, T> getIndexDistancePair(int index) {
-        return this.indexDistancePairList.get(index);
+        return this.indexDistancePairList[index];
     }
 
-    public void removeFirstIndexDistancePair() {
-        indexDistancePairList.remove(0);
+    public Pair<T,T> popIndexDistancePair() {
+        return indexDistancePairStack.pop();
+    }
+
+    public Pair<T,T> peekIndexDistancePair() {
+        return indexDistancePairStack.peek();
     }
 
     public int getGSSize() {
-        return GS.size();
+        return GS.length;
     }
 
     public int getIndexDistancePairListSize(){
-        return indexDistancePairList.size();
+        return indexDistancePairList.length;
     }
 
-    public BigInteger getWinInfo() {
-        return this.winInfo;
+    public int getIndexDistancePairStackSize(){
+        return indexDistancePairStack.size();
     }
 
-    public void setIsWinInfo(BigInteger winInfo) {
-        this.winInfo = winInfo;
+
+
+    public void genFinalResults() {
+        if(indexOrderIsWinList != null){
+            for(Triple<Integer, Integer, Boolean> element: indexOrderIsWinList){
+                if(element.getRight()==true){
+                    finalResultsList.add(new ImmutableTriple<>(indexDistancePairList[element.getLeft()].getLeft(), hospitalID, element.getLeft()));
+                }
+            }
+        }
+    }
+
+    public ArrayList<Triple<T, Integer, Integer>> getFinalResults(){
+        return finalResultsList;
+    }
+
+    public void setWinInfoList(Integer index, Integer order, Boolean  isWin) {
+        Triple<Integer, Integer, Boolean> winInfoTriple = new ImmutableTriple<>(index, order, isWin);
+        indexOrderIsWinList.add(winInfoTriple);
+    }
+
+    public T[][] getGS(){
+        return GS;
+    }
+    public T[] getQuery(){
+        return query;
+    }
+    public Pair[] getAllIndexDistancePair(){
+        return indexDistancePairList;
+    }
+
+    public Pair[] getAllIndexDistancePairFromStack(){
+        int size = indexDistancePairStack.size();
+        Pair[] temp = new Pair[size];
+        for(int i = size-1; i>= 0; i--){
+            temp[i] = indexDistancePairStack.pop();
+        }
+        return temp;
     }
 
 }

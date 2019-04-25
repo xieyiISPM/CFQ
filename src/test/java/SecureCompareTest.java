@@ -11,9 +11,11 @@ public class SecureCompareTest {
 
     private static double secureCompareTest(){
         SecureRandom srand = new SecureRandom();
-        int bitSize = 120;
-        int distBitSize = 100;
-        int startValue = Integer.MAX_VALUE;
+        int bitSize = 12;
+        int distBitSize = 10;
+       // int startValue = Integer.MAX_VALUE;
+        int startValue = 0;
+
         SecureCompare sc = new SecureCompare(bitSize);
 
         BigInteger twoToL =  BigInteger.TWO.pow(bitSize);
