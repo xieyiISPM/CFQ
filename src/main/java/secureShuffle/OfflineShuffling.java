@@ -16,7 +16,7 @@ public class OfflineShuffling  {
     }
 
     /**
-     * Hospital Hi generates encrypted vector v: L0
+     * B generates encrypted vector v: L0
      * @param arraySize size of v array and L0 array
      * @param bitSize   upper bound of v array is 2^bitsize -1
      * @param paillierPublicKey  Paillier public key
@@ -37,7 +37,7 @@ public class OfflineShuffling  {
     }
 
     /**
-     * Medical Center C generates L1
+     * A generates L1
      * @param arraySize size of u array, r array, and L1 array
      * @param bitSize upper bounds of u array is 2^bitSize -1
      * @param twoToL A very big number which is at least bigger than 2* 2^bitSize to make sure u+v is smaller than twoToL
@@ -65,7 +65,7 @@ public class OfflineShuffling  {
     }
 
     /**
-     * Hospital Hi generate offline output, which is L2 array
+     * Generate offline output for B, which is L2 array
      * @param L1 L1 array from Medical Center C
      * @param twoToL A very big number which is at least bigger than 2* 2^bitSize to make sure u+v is smaller than twoToL
      * @param paillierPrivateKey Paillier private key

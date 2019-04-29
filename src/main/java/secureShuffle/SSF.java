@@ -33,11 +33,11 @@ public class SSF {
         return pi;
     }
 
-    public BigInteger[] getOnlineOuptut(int arraySize, BigInteger[] xH, BigInteger[] xC, OfflineShuffling offlineShuffling, int[] pi ) throws Exception {
+    public BigInteger[] getOnlineOuptut(int arraySize, BigInteger[] xB, BigInteger[] xA, OfflineShuffling offlineShuffling, int[] pi ) throws Exception {
         OnlineShuffling onlineShuffling = new OnlineShuffling();
 
-        BigInteger[] L3 = onlineShuffling.genL3(offlineShuffling.V, xH, twoToL);
-        BigInteger[] L4 = onlineShuffling.genL4(offlineShuffling.U, L3, xC, twoToL, pi);
+        BigInteger[] L3 = onlineShuffling.genL3(offlineShuffling.V, xB, twoToL);
+        BigInteger[] L4 = onlineShuffling.genL4(offlineShuffling.U, L3, xA, twoToL, pi);
         return L4;
     }
 

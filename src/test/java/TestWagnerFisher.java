@@ -8,10 +8,31 @@ public class TestWagnerFisher {
     @Test
     void testWagnerFisher(){
 
-        String strX = "abreitsjour";
+
+        /*xA: 18 16 9 10 16 1 15 14 16 17
+        xB: 16 20 23 2 9 23 24 13 9 30
+        x: 2 4 0 12 25 24 7 27 25 15
+
+        yA: 4 5 27 27 22 28 7 22 22 20
+        yB: 28 25 28 23 15 2 23 16 7 31
+        y: 0 30 23 18 5 30 30 6 29 19
+
+
+        dED_A = -5
+        dED_B = 7
+        reconstructed dED = 2
+*/
+
+        /*String strX = "abreitsjour";
         String strY = "arbeitsjournal";
         char[] charX = strX.toCharArray();
         char[] charY = strY.toCharArray();
+        BigInteger[] x  = new BigInteger[charX.length];
+        BigInteger[] y = new BigInteger[charY.length];
+        int n1 = charX.length ;
+        int n2 = charY.length;*/
+        int[] charX = {2, 4, 0, 12, 25, 24, 7, 27, 25, 15};
+        int[] charY ={2, 30, 23, 18, 5, 30, 30, 6, 29, 15};
         BigInteger[] x  = new BigInteger[charX.length];
         BigInteger[] y = new BigInteger[charY.length];
         int n1 = charX.length ;
@@ -19,10 +40,10 @@ public class TestWagnerFisher {
 
 
         for (int i = 0; i< n1; i++){
-            x[i] = BigInteger.valueOf(Character.getNumericValue(charX[i]));
+            x[i] = BigInteger.valueOf(charX[i]);
         }
         for (int i = 0; i< n2; i++){
-            y[i] = BigInteger.valueOf(Character.getNumericValue(charY[i]));
+            y[i] = BigInteger.valueOf(charY[i]);
         }
 
 

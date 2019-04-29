@@ -1,5 +1,6 @@
 import com.n1analytics.paillier.PaillierPrivateKey;
 import com.n1analytics.paillier.PaillierPublicKey;
+import org.junit.jupiter.api.Test;
 import secureShuffle.InitSet;
 import secureShuffle.OfflineShuffling;
 import secureShuffle.OnlineShuffling;
@@ -9,7 +10,8 @@ import java.security.SecureRandom;
 import java.util.*;
 
 public class ShufflingTest {
-    public static void main(String[] args) throws Exception{
+    @Test
+    void testShuffling() throws Exception{
         OfflineShuffling offlineShuffling = new OfflineShuffling();
         /*BigInteger[] randomArray = offlineShuffling.genRandomArray(5,128);
         printList(randomArray);
@@ -85,9 +87,10 @@ public class ShufflingTest {
      * Test offline shuffling. Warning: bitsize < Paillier secure factor/2
      * for example if Paillier keys are genereated by 1024. the bitsize should less than 512
      */
-    private static void offlineTest(){
+    @Test
+    void offlineTest(){
         OfflineShuffling offlineShuffling = new OfflineShuffling();
-        int arraySize = 100000;
+        int arraySize = 1000;
         int bitSize = 10;
 
         BigInteger twoToL = (BigInteger.TWO).pow(bitSize);
@@ -147,10 +150,11 @@ public class ShufflingTest {
      * @return test result
      * @throws Exception
      */
-    private static String onlineShufflingTest() throws Exception{
+    @Test
+    String onlineShufflingTest() throws Exception{
         OfflineShuffling offlineShuffling = new OfflineShuffling();
         int arraySize = 100;
-        int bitSize = 5; // note  bitsize < paillier secrete factor/2
+        int bitSize = 100; // note  bitsize < paillier secrete factor/2
         BigInteger twoToL = (BigInteger.TWO).pow(bitSize);
         PaillierPrivateKey paillierPrivateKey = PaillierPrivateKey.create(1024);
         PaillierPublicKey paillierPublicKey = paillierPrivateKey.getPublicKey();
@@ -161,11 +165,11 @@ public class ShufflingTest {
         BigInteger[] L2 = offlineShuffling.genL2(L1, twoToL, paillierPrivateKey);
 
         OnlineShuffling onlineShuffling = new OnlineShuffling();
-        BigInteger[] xH = initSet.genRandomArray(arraySize, bitSize);
-        BigInteger[] xC = initSet.genRandomArray(arraySize, bitSize);
+        BigInteger[] xB = initSet.genRandomArray(arraySize, bitSize);
+        BigInteger[] xA = initSet.genRandomArray(arraySize, bitSize);
 
-        BigInteger[] L3 = onlineShuffling.genL3(offlineShuffling.V, xH, twoToL);
-        BigInteger[] L4 = onlineShuffling.genL4(offlineShuffling.U,L3,xC, twoToL, pi);
+        BigInteger[] L3 = onlineShuffling.genL3(offlineShuffling.V, xB, twoToL);
+        BigInteger[] L4 = onlineShuffling.genL4(offlineShuffling.U,L3,xA, twoToL, pi);
 
         BigInteger[] secretArray = new BigInteger[arraySize];
 
@@ -199,7 +203,7 @@ public class ShufflingTest {
 
         BigInteger[] xList = new BigInteger[arraySize];
         for (int i = 0; i < arraySize; i++) {
-            xList[i]=xH[i].add(xC[i]).mod(twoToL);
+            xList[i]=xB[i].add(xA[i]).mod(twoToL);
         }
 
         BigInteger[] xShuffledList = reorderArray(xList, pi);
@@ -227,7 +231,8 @@ public class ShufflingTest {
      * Test BigInteger's hascode
      * @return
      */
-    private static boolean hashCodeTest(){
+    @Test
+     boolean hashCodeTest(){
         HashSet<BigInteger> hashSet = new HashSet<>();
         for(int i= 0; i< 100000; i++){
             Random rnd = new SecureRandom();

@@ -1,10 +1,12 @@
+import org.junit.jupiter.api.Test;
 import secureBranch.SecureBranch;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
 
 public class SecureBranchTest {
-    public static void main(String[] args) throws Exception{
+    @Test
+     void testSecureBranch() throws Exception{
         int bitSize = 5;
         SecureRandom srand = new SecureRandom();
         BigInteger m = (BigInteger.TWO).pow(bitSize);

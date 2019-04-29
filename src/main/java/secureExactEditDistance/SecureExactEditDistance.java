@@ -53,10 +53,14 @@ public class SecureExactEditDistance{
         SecureMiniSelection sms = new SecureMiniSelection(bitSize);
 
 
-        for (int j = 1; j<= n2; j++){
-            for(int i=1; i<=n1; i++){
-                BigInteger t1A = yA[i-1].add(BigInteger.ONE).mod(twoToL);
-                BigInteger t2A = yA[i-1].subtract(BigInteger.ONE).mod(twoToL);
+        for (int i = 1; i<= n1; i++){
+            for(int j=1; j<=n2; j++){
+               // BigInteger t1A = yA[i-1].add(BigInteger.ONE).mod(twoToL);
+                BigInteger t1A = yA[i-1].add(BigInteger.ONE);
+
+                //BigInteger t2A = yA[i-1].subtract(BigInteger.ONE).mod(twoToL);
+                BigInteger t2A = yA[i-1].subtract(BigInteger.ONE);
+
                 BigInteger t1B = yB[i-1];
                 BigInteger t2B = yB[i-1];
 
@@ -68,8 +72,9 @@ public class SecureExactEditDistance{
                 BigInteger cSubA = sb2.getYA();
                 BigInteger cSubB = sb2.getYB();
 
-                sms.getMini(sms.genArray(deltaA[i-1][j].add(cDelA).mod(twoToL), deltaA[i][j-1].add(cInA).mod(twoToL), deltaA[i-1][j-1].add(cSubA).mod(twoToL)),
-                        sms.genArray(deltaB[i-1][j].add(cDelB).mod(twoToL), deltaB[i][j-1].add(cInB).mod(twoToL), deltaB[i-1][j-1].add(cSubB).mod(twoToL)));
+                //sms.getMini(sms.genArray(deltaA[i-1][j].add(cDelA).mod(twoToL), deltaA[i][j-1].add(cInA).mod(twoToL), deltaA[i-1][j-1].add(cSubA).mod(twoToL)), sms.genArray(deltaB[i-1][j].add(cDelB).mod(twoToL), deltaB[i][j-1].add(cInB).mod(twoToL), deltaB[i-1][j-1].add(cSubB).mod(twoToL)));
+                sms.getMini(sms.genArray(deltaA[i-1][j].add(cDelA), deltaA[i][j-1].add(cInA), deltaA[i-1][j-1].add(cSubA)), sms.genArray(deltaB[i-1][j].add(cDelB), deltaB[i][j-1].add(cInB), deltaB[i-1][j-1].add(cSubB)));
+
                 deltaA[i][j] = sms.getMinA();
                 deltaB[i][j] = sms.getMinB();
 
