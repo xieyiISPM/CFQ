@@ -19,8 +19,8 @@ public class SecureMiniTest {
     //private static void secureMiniTest(BigInteger[] xA, BigInteger[] xB, int bitSize) throws Exception{
     @Test
     void testSecureMini() throws Exception{
-        int arraySize = 10;
-        int bitSize = 5; // note  bitsize < paillier secrete factor/2
+        int arraySize = 2000;
+        int bitSize = 10; // note  bitsize < paillier secrete factor/2
         InitSet initSet = new InitSet();
         BigInteger[] xB = initSet.genRandomArray(arraySize, bitSize);
         BigInteger[] xA = initSet.genRandomArray(arraySize, bitSize);

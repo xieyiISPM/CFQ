@@ -153,7 +153,7 @@ public class ShufflingTest {
     @Test
     String onlineShufflingTest() throws Exception{
         OfflineShuffling offlineShuffling = new OfflineShuffling();
-        int arraySize = 100;
+        int arraySize = 1000;
         int bitSize = 100; // note  bitsize < paillier secrete factor/2
         BigInteger twoToL = (BigInteger.TWO).pow(bitSize);
         PaillierPrivateKey paillierPrivateKey = PaillierPrivateKey.create(1024);

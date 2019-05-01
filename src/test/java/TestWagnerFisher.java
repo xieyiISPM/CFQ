@@ -31,8 +31,8 @@ public class TestWagnerFisher {
         BigInteger[] y = new BigInteger[charY.length];
         int n1 = charX.length ;
         int n2 = charY.length;*/
-        int[] charX = {2, 4, 0, 12, 25, 24, 7, 27, 25, 15};
-        int[] charY ={2, 30, 23, 18, 5, 30, 30, 6, 29, 15};
+        int[] charX = {4, 9, 28, 20, 14, 11, 5, 1, 31, 22, 18, 21, 11, 28, 31, 21, 10, 5, 16, 17, 5, 4, 25};
+        int[] charY ={18, 15, 5, 4, 26, 18, 15, 30, 27, 9, 9, 17, 5, 14, 27, 10, 30, 11, 10, 24, 24, 23, 19};
         BigInteger[] x  = new BigInteger[charX.length];
         BigInteger[] y = new BigInteger[charY.length];
         int n1 = charX.length ;

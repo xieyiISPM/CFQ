@@ -7,7 +7,7 @@ import java.math.BigInteger;
 public class TestSEED {
     @Test
     void testSEED() throws Exception{
-        int arraySize = 10;
+        int arraySize = 23;
         int bitSize = 5; // note  bitsize < paillier secrete factor/2
         InitSet initSet = new InitSet();
         BigInteger[] xB = initSet.genRandomArray(arraySize, bitSize);
@@ -48,7 +48,7 @@ public class TestSEED {
 
     private void printArr(BigInteger[] arr){
         for (BigInteger item: arr){
-            System.out.print(item + " ");
+            System.out.print(item + ", ");
         }
         System.out.println();
     }
