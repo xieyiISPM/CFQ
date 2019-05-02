@@ -12,7 +12,7 @@ public class SecureCompareTest {
     private static double secureCompareTest(){
         SecureRandom srand = new SecureRandom();
         int bitSize = 12;
-        int distBitSize = 10;
+        int distBitSize = 5;
        // int startValue = Integer.MAX_VALUE;
         int startValue = 0;
 

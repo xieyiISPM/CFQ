@@ -21,9 +21,9 @@ public class TestTopKQuery {
     @Test
     void testSecureQueryPreCompute() throws Exception{
         int bitSize = 10;
-        int records = 3;
-        int arraySize = 6;
-        int k = 2;
+        int records = 50;
+        int arraySize = 10;
+        int k = 3;
 
         Helper helper = new Helper(bitSize);
         helper.genQuery(arraySize);
@@ -69,8 +69,8 @@ public class TestTopKQuery {
         topKQuery.secureQueryPreCompute(QA,SA,QB,SB);
         topKQuery.genTopKIndexDistTuple(k);
 
-        Pair<BigInteger, BigInteger>[] indexAndDistH = topKQuery.getIndexDistTupleH();
-        Pair<BigInteger, BigInteger>[] indexAndDistC = topKQuery.getIndexDistTupleC();
+        Pair<BigInteger, BigInteger>[] indexAndDistH = topKQuery.getIndexDistTupleB();
+        Pair<BigInteger, BigInteger>[] indexAndDistC = topKQuery.getIndexDistTupleA();
 
         BigInteger[] reconstructedIndex = new BigInteger[indexAndDistC.length];
         BigInteger[] reconstructedDist = new BigInteger[indexAndDistC.length];
@@ -87,8 +87,8 @@ public class TestTopKQuery {
 
         topKQuery.genTopKIndexDistTuple(k);
 
-        Pair<BigInteger, BigInteger>[] kIndexAndDistH = topKQuery.getTopKPairH();
-        Pair<BigInteger, BigInteger>[] kIndexAndDistC = topKQuery.getTopKPairC();
+        Pair<BigInteger, BigInteger>[] kIndexAndDistH = topKQuery.getTopKPairB();
+        Pair<BigInteger, BigInteger>[] kIndexAndDistC = topKQuery.getTopKPairA();
 
         BigInteger[] reconstructedTopKIndex = new BigInteger[kIndexAndDistC.length];
         BigInteger[] reconstructedTopKDist = new BigInteger[kIndexAndDistC.length];

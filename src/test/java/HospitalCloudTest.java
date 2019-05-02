@@ -2,7 +2,6 @@ import helper.Helper;
 import kNNQuery.Cloud;
 import kNNQuery.Hospital;
 import kNNQuery.KNNQuery;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
 import topkQuery.TopKQuery;
 
@@ -85,7 +84,7 @@ public class HospitalCloudTest {
         int bitSize = 10;
         int arraySize = 5;
         int records = 5;
-        int k = 5;
+        int k = 2;
 
         Cloud cloud = new Cloud();
         Hospital<BigInteger>[] hospital =  new Hospital[]{ new Hospital(0),new Hospital(1),new Hospital(2),new Hospital(3)} ;
@@ -145,8 +144,8 @@ public class HospitalCloudTest {
             TopKQuery topKQuery = new TopKQuery(bitSize);
             topKQuery.secureQueryPreCompute(hospital[j].getQuery(), hospital[j].getGS(), (BigInteger[])cloud.getHospital(j).getQuery(), (BigInteger[][])cloud.getHospital(j).getGS());
             topKQuery.genTopKIndexDistTuple(k);
-            hospital[j].addTopKIndexDistancePair(topKQuery.getTopKPairH());
-            cloud.getHospital(j).addTopKIndexDistancePair(topKQuery.getTopKPairC());
+            hospital[j].addTopKIndexDistancePair(topKQuery.getTopKPairB());
+            cloud.getHospital(j).addTopKIndexDistancePair(topKQuery.getTopKPairA());
         }
 
         /*for(int j=0; j< cloud.getHospitalSize(); j++){
