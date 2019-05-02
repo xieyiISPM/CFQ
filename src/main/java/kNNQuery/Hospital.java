@@ -7,13 +7,16 @@ import org.apache.commons.lang3.tuple.Triple;
 import java.util.ArrayList;
 import java.util.Stack;
 
-
+/**
+ * Class to save Hospital Information
+ * @param <T>
+ */
 public class Hospital<T> {
-    private T[][] GS;
-    private T[] query;
+    private T[][] GS; //genomic sequences
+    private T[] query; //query shared with hospital
 
     private Pair<T, T>[] indexDistancePairList ;
-    private Stack<Pair<T,T>> indexDistancePairStack = new Stack<>();
+    private Stack<Pair<T,T>> indexDistancePairStack = new Stack<>(); //Use stack to help final sort
     //private BigInteger winInfo;
     private ArrayList<Triple<Integer, Integer, Boolean>> indexOrderIsWinList = new ArrayList<>();
     private ArrayList<Triple<T, Integer, Integer>> finalResultsList = new ArrayList<>(); //index of database, hospitalID, finalOrder)
@@ -68,7 +71,6 @@ public class Hospital<T> {
     }
 
 
-
     public void genFinalResults() {
         if(indexOrderIsWinList != null){
             for(Triple<Integer, Integer, Boolean> element: indexOrderIsWinList){
@@ -94,6 +96,7 @@ public class Hospital<T> {
     public T[] getQuery(){
         return query;
     }
+
     public Pair[] getAllIndexDistancePair(){
         return indexDistancePairList;
     }

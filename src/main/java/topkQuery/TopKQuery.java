@@ -75,14 +75,12 @@ public class TopKQuery {
             BigInteger rnd = new BigInteger(bitSize, srand);
             indexA[i] = rnd;
             indexB[i] = (BigInteger.valueOf(i).subtract(rnd)).mod(twoToL);
-            /*indexA[i] = BigInteger.valueOf(i).mod(twoToL);
-            indexB[i] = BigInteger.valueOf(0).mod(twoToL);*/
         }
 
         SSF ssf = new SSF(bitSize);
 
         int indexArraySize = indexA.length;
-        int[] pi = ssf.getPi(indexArraySize);
+        Integer[] pi = ssf.getPi(indexArraySize);
 
         OfflineShuffling offlineShufflingIndex = new OfflineShuffling();
         OfflineShuffling offlineShufflingDist = new OfflineShuffling();
@@ -90,8 +88,8 @@ public class TopKQuery {
         BigInteger[] indexBPrime = ssf.getOfflineOutput(indexArraySize, offlineShufflingIndex, pi);
         BigInteger[] distBPrime = ssf.getOfflineOutput(indexArraySize,offlineShufflingDist,pi);
 
-        BigInteger[] indexAPrime = ssf.getOnlineOuptut(indexArraySize,indexB, indexA, offlineShufflingIndex, pi);
-        BigInteger[] distAPrime = ssf.getOnlineOuptut(indexArraySize, dEDB,dEDA,offlineShufflingDist,pi);
+        BigInteger[] indexAPrime = ssf.getOnlineOutput(indexArraySize,indexB, indexA, offlineShufflingIndex, pi);
+        BigInteger[] distAPrime = ssf.getOnlineOutput(indexArraySize, dEDB,dEDA,offlineShufflingDist,pi);
 
 
         for(int i = 0; i< m; i++){

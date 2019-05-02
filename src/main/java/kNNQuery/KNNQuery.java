@@ -16,6 +16,19 @@ public class KNNQuery<T> {
         this.bitSize = bitSize;
     }
 
+    /**
+     * Generate final k-NN among different hospitals
+     * Algorithm:
+     * for 0 to k-1:
+     *  1. peek each top distance from hospital's stack
+     *  2. compare distances among distances
+     *  3. pop out distance of final winner
+     *  4. store winner information
+     * endFor
+     * @param cloud Cloud
+     * @param hospitals hospital arrays
+     * @param k k-NN
+     */
     public void genKNN(Cloud<T> cloud, Hospital<T>[] hospitals, int k) {
         int hospitalNum = hospitals.length;
         for (int i = 0; i < k; i++) {
@@ -23,10 +36,10 @@ public class KNNQuery<T> {
             int next = 1;
             int winnerID = 0;
             while (next < hospitalNum) {
-                BigInteger distHA = (BigInteger) ((Pair<BigInteger, BigInteger>) hospitals[winnerID].peekIndexDistancePair()).getRight();
-                BigInteger distHB = (BigInteger) ((Pair<BigInteger, BigInteger>) hospitals[next].peekIndexDistancePair()).getRight();
-                BigInteger distCA = (BigInteger) ((Pair<BigInteger, BigInteger>) cloud.getHospital(winnerID).peekIndexDistancePair()).getRight();
-                BigInteger distCB = (BigInteger) ((Pair<BigInteger, BigInteger>) cloud.getHospital(next).peekIndexDistancePair()).getRight();
+                BigInteger distHA = ((Pair<BigInteger, BigInteger>) hospitals[winnerID].peekIndexDistancePair()).getRight();
+                BigInteger distHB = ((Pair<BigInteger, BigInteger>) hospitals[next].peekIndexDistancePair()).getRight();
+                BigInteger distCA = ((Pair<BigInteger, BigInteger>) cloud.getHospital(winnerID).peekIndexDistancePair()).getRight();
+                BigInteger distCB = ((Pair<BigInteger, BigInteger>) cloud.getHospital(next).peekIndexDistancePair()).getRight();
 
                 SecureCompare sc = new SecureCompare(bitSize);
                 int compareResult = sc.secureCompare(distHA, distCA, distHB, distCB);

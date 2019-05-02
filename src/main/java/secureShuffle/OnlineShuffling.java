@@ -42,7 +42,7 @@ public class OnlineShuffling {
      * @return
      * @throws Exception
      */
-    public BigInteger[] genL4(BigInteger[] uArray, BigInteger[] L3, BigInteger[] xA, BigInteger twoToL, int[] pi) throws Exception{
+    public BigInteger[] genL4(BigInteger[] uArray, BigInteger[] L3, BigInteger[] xA, BigInteger twoToL, Integer[] pi) throws Exception{
         if((uArray.length != xA.length) || (L3.length != xA.length)){
             throw new ArrayIndexOutOfBoundsException();
         }

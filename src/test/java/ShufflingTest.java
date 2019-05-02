@@ -99,7 +99,7 @@ public class ShufflingTest {
         boolean testResult = true;
         for(int j= 0; j< 1; j++) { //test 100 times
             InitSet initSet = new InitSet();
-            int[] pi = initSet.genPi(arraySize);
+            Integer[] pi = initSet.genPi(arraySize);
             BigInteger[] L0 = offlineShuffling.genL0(arraySize, bitSize, paillierPublicKey);
             BigInteger[] L1 = offlineShuffling.genL1(arraySize, bitSize, twoToL, L0, pi, paillierPublicKey);
             BigInteger[] L2 = offlineShuffling.genL2(L1, twoToL, paillierPrivateKey);
@@ -159,7 +159,7 @@ public class ShufflingTest {
         PaillierPrivateKey paillierPrivateKey = PaillierPrivateKey.create(1024);
         PaillierPublicKey paillierPublicKey = paillierPrivateKey.getPublicKey();
         InitSet initSet = new InitSet();
-        int[] pi = initSet.genPi(arraySize);
+        Integer[] pi = initSet.genPi(arraySize);
         BigInteger[] L0 = offlineShuffling.genL0(arraySize, bitSize, paillierPublicKey);
         BigInteger[] L1 = offlineShuffling.genL1(arraySize, bitSize, twoToL, L0, pi, paillierPublicKey);
         BigInteger[] L2 = offlineShuffling.genL2(L1, twoToL, paillierPrivateKey);
@@ -259,7 +259,7 @@ public class ShufflingTest {
         }
     }
 
-    private static BigInteger[] reorderArray(BigInteger[] arr, int[] pi){
+    private static BigInteger[] reorderArray(BigInteger[] arr, Integer[] pi){
         BigInteger[] reordered = new BigInteger[arr.length];
         for(int i= 0; i< reordered.length; i++){
             reordered[i] = arr[pi[i]];

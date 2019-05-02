@@ -82,8 +82,8 @@ public class HospitalCloudTest {
     @Test
     void testHospitalCloudCombine() throws Exception{
         int bitSize = 10;
-        int arraySize = 5;
-        int records = 5;
+        int arraySize = 10;
+        int records = 50;
         int k = 2;
 
         Cloud cloud = new Cloud();

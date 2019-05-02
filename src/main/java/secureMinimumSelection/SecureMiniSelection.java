@@ -1,7 +1,5 @@
 package secureMinimumSelection;
 
-import gc.GarbledCircuit;
-import scala.math.BigInt;
 import secureShuffle.OfflineShuffling;
 import secureShuffle.SSF;
 import java.math.BigInteger;
@@ -32,11 +30,11 @@ public class SecureMiniSelection {
 
         SSF ssf = new SSF(bitSize);
         int arraySize = xA.length;
-        int[] pi = ssf.getPi(arraySize);
+        Integer[] pi = ssf.getPi(arraySize);
 
         OfflineShuffling offlineShufflingX = new OfflineShuffling();
         xAPrime = ssf.getOfflineOutput(arraySize, offlineShufflingX,pi);
-        xBPrime = ssf.getOnlineOuptut(arraySize,xB, xA,offlineShufflingX,pi );
+        xBPrime = ssf.getOnlineOutput(arraySize,xB, xA,offlineShufflingX,pi );
 
         /*System.out.print("xAPrime:");
         printArr(xAPrime);

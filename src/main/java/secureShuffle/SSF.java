@@ -4,10 +4,15 @@ import com.n1analytics.paillier.PaillierPrivateKey;
 import com.n1analytics.paillier.PaillierPublicKey;
 
 import java.math.BigInteger;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class SSF {
     int bitSize = 10;
     BigInteger twoToL = (BigInteger.TWO).pow(bitSize);
+
 
     public SSF(){
 
@@ -17,7 +22,7 @@ public class SSF {
         this.bitSize = bitSize;
         this.twoToL = (BigInteger.TWO).pow(bitSize);
     }
-    public BigInteger[] getOfflineOutput(int arraySize, OfflineShuffling offlineShuffling, int[] pi){
+    public BigInteger[] getOfflineOutput(int arraySize, OfflineShuffling offlineShuffling, Integer[] pi){
         BigInteger twoToL = (BigInteger.TWO).pow(bitSize);
         PaillierPrivateKey paillierPrivateKey = PaillierPrivateKey.create(1024);
         PaillierPublicKey paillierPublicKey = paillierPrivateKey.getPublicKey();
@@ -27,18 +32,20 @@ public class SSF {
         return L2;
     }
 
-    public int[] getPi(int arraySize){
+    public Integer[] getPi(int arraySize){
         InitSet initSet = new InitSet();
-        int[] pi = initSet.genPi(arraySize);
+        Integer[] pi = initSet.genPi(arraySize);
         return pi;
     }
 
-    public BigInteger[] getOnlineOuptut(int arraySize, BigInteger[] xB, BigInteger[] xA, OfflineShuffling offlineShuffling, int[] pi ) throws Exception {
+    public BigInteger[] getOnlineOutput(int arraySize, BigInteger[] xB, BigInteger[] xA, OfflineShuffling offlineShuffling, Integer[] pi ) throws Exception {
         OnlineShuffling onlineShuffling = new OnlineShuffling();
 
         BigInteger[] L3 = onlineShuffling.genL3(offlineShuffling.V, xB, twoToL);
         BigInteger[] L4 = onlineShuffling.genL4(offlineShuffling.U, L3, xA, twoToL, pi);
         return L4;
     }
+
+
 
 }

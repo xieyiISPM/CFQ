@@ -1,11 +1,9 @@
 package secureBranch;
 
-import gc.GarbledCircuit;
 import secureShuffle.OfflineShuffling;
 import secureShuffle.SSF;
 
 import java.math.BigInteger;
-import java.util.Arrays;
 
 public class SecureBranch {
     private int bitSize = 10;
@@ -33,11 +31,11 @@ public class SecureBranch {
         int arraySizeX = xA.length;
 
         SSF ssf = new SSF(bitSize);
-        int[] pi = ssf.getPi(arraySizeX);
+        Integer[] pi = ssf.getPi(arraySizeX);
 
         OfflineShuffling offlineShufflingX = new OfflineShuffling();
         BigInteger[] xBPrime = ssf.getOfflineOutput(arraySizeX, offlineShufflingX, pi);
-        BigInteger[] xAPrime = ssf.getOnlineOuptut(arraySizeX,xB, xA,offlineShufflingX, pi );
+        BigInteger[] xAPrime = ssf.getOnlineOutput(arraySizeX,xB, xA,offlineShufflingX, pi );
 
         /*System.out.println("shuffle pi: " + Arrays.toString(pi));
         printArr(xBPrime,"xHPrime");
@@ -51,7 +49,7 @@ public class SecureBranch {
 
         OfflineShuffling offlineShufflingY = new OfflineShuffling();
         BigInteger[] yBPrime = ssf.getOfflineOutput(arraySizeX, offlineShufflingY,pi);
-        BigInteger[] yAPrime = ssf.getOnlineOuptut(arraySizeX,yB, yA,offlineShufflingY,pi );
+        BigInteger[] yAPrime = ssf.getOnlineOutput(arraySizeX,yB, yA,offlineShufflingY,pi );
 
         /*printArr(yAPrime,"yAPrime");
         printArr(yBPrime,"yBPrime");
@@ -81,9 +79,9 @@ public class SecureBranch {
 
     /**
      * Heper method: combine BigIntegers  to a array array
-     * @param bigInt1
-     * @param bigInt2
-     * @return
+     * @param bigInt1 BigInteger 1
+     * @param bigInt2 BigInteger 2
+     * @return array with bigInt1 and bigInt2
      */
     public BigInteger[] genArray(BigInteger bigInt1, BigInteger bigInt2){
         BigInteger[] arr= new BigInteger[2];
@@ -95,7 +93,7 @@ public class SecureBranch {
 
     /**
      * get YA
-     * @return
+     * @return return yA
      */
     public BigInteger getYA(){
         return yOutputA;
@@ -103,7 +101,7 @@ public class SecureBranch {
 
     /**
      * get YB
-     * @return
+     * @return return yB
      */
     public BigInteger getYB(){
         return yOutputB;
@@ -111,8 +109,8 @@ public class SecureBranch {
 
     /**
      * hepler function to print BigInteger array
-     * @param arr
-     * @param varName
+     * @param arr BigInteger array
+     * @param varName array name
      */
     private void printArr(BigInteger[] arr, String varName){
 
@@ -128,13 +126,12 @@ public class SecureBranch {
      * Helper function: reconstruct two shares
      * @param a share 1
      * @param b share 2
-     * @param bitSize
+     * @param bitSize bitSize
      * @return reconstructed original value
      */
     private  BigInteger reconstruct(BigInteger a, BigInteger b, int bitSize){
         BigInteger m = (BigInteger.TWO).pow(bitSize);
-        BigInteger sum = (a.add(b)).mod(m);
-        return sum;
+        return  (a.add(b)).mod(m);
     }
 
     /**

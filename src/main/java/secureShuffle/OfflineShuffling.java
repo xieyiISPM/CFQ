@@ -46,7 +46,7 @@ public class OfflineShuffling  {
      * @param paillierPublicKey  Paillier public key
      * @return return L1 array
      */
-    public BigInteger[] genL1(int arraySize, int bitSize, BigInteger twoToL,BigInteger[] L0, int[] pi,PaillierPublicKey paillierPublicKey ){
+    public BigInteger[] genL1(int arraySize, int bitSize, BigInteger twoToL, BigInteger[] L0, Integer[] pi, PaillierPublicKey paillierPublicKey ){
         BigInteger[] uArray = genRandomArray(arraySize,bitSize);
         U = uArray;
         //System.out.println("u Array:");

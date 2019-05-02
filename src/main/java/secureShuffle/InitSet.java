@@ -4,6 +4,7 @@ import org.bouncycastle.pqc.math.linearalgebra.Permutation;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.Arrays;
 
 public class InitSet {
     public InitSet(){
@@ -15,9 +16,10 @@ public class InitSet {
      * @param size array size
      * @return permuted array index
      */
-    public int[] genPi(int size){
+    public Integer[] genPi(int size){
         Permutation perm = new Permutation(size, new SecureRandom());
-        return perm.getVector();
+        int[] temp = perm.getVector();
+        return Arrays.stream(temp).boxed().toArray( Integer[]::new );
     }
 
     /**
@@ -26,7 +28,7 @@ public class InitSet {
      * @param pi
      * @return return permuted array
      */
-    public BigInteger[] permRandomArray(BigInteger[] arr, int[] pi){
+    public BigInteger[] permRandomArray(BigInteger[] arr, Integer[] pi){
         if(arr.length != pi.length) {
             System.err.println("Array size does not match permutation function size");
             return null;
