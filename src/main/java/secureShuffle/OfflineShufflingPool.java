@@ -7,21 +7,34 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A offlineShuffling pool which has to be pre created to save computation time
+ */
 public class OfflineShufflingPool {
     //Integer is to store offlineshuffling array size
+    //Pair is to store (pi[], L2)
     private Map<Integer, Pair<Integer[],BigInteger[] > > offlineShufflingSequence = new HashMap<>();
     private SSF ssf;
-    private OfflineShuffling offlineShuffling;
+    private Map<Integer, OfflineShuffling> offlineShufflingMap = new HashMap<>();
 
-    public OfflineShufflingPool(int bitSize, OfflineShuffling offlineShuffling){
+    public OfflineShufflingPool(int bitSize){
         this.ssf = new SSF(bitSize);
-        this.offlineShuffling  = offlineShuffling;
+    }
+
+    public void addOfflineShufflingToPool(int arraySize, OfflineShuffling offlineShuffling, Integer[] pi){
+        offlineShuffling.genVArray(arraySize);
+        offlineShuffling.genUArray(arraySize);
+        offlineShuffling.addPi(pi);
+        this.offlineShufflingMap.put(arraySize, offlineShuffling);
+
+
     }
 
     public void addToPool(int arraySize){
-        InitSet initSet = new InitSet();
-        Integer[] pi = initSet.genPi(arraySize);
-        BigInteger[] L2 =  ssf.getOfflineOutput(arraySize, offlineShuffling, pi);
+        /*InitSet initSet = new InitSet();
+        Integer[] pi = initSet.genPi(arraySize);*/
+        Integer[] pi = offlineShufflingMap.get(arraySize).getPi();
+        BigInteger[] L2 =  ssf.getOfflineOutput(arraySize, offlineShufflingMap.get(arraySize), pi;
         Pair<Integer[],BigInteger[] >  piL2Pair = new ImmutablePair<>(pi, L2);
         if(!offlineShufflingSequence.containsKey(arraySize)){
             offlineShufflingSequence.put(arraySize, piL2Pair);

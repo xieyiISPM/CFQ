@@ -7,12 +7,59 @@ import com.n1analytics.paillier.PaillierPublicKey;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 
+/**
+ * After initializing offlineShuffling object,
+ * user has to genVArray,  genUArray and pass Pi to offlineShuffling object
+ */
 public class OfflineShuffling  {
 
-    public BigInteger[] U; //only for test
-    public BigInteger[] V; //only for test
-    public OfflineShuffling(){
+    private BigInteger[] U; //only for test
+    private BigInteger[] V; //only for test
+    private int bitSize;
+    private Integer[] pi;
+    public OfflineShuffling(int bitSize){
+        this.bitSize = bitSize;
+    }
 
+    public BigInteger[] genVArray(int arraySize){
+        BigInteger[] vArray = genRandomArray(arraySize, bitSize);
+        this.V = vArray;
+        return vArray;
+    }
+
+    public BigInteger[] genUArray(int arraySize){
+        BigInteger[] uArray = genRandomArray(arraySize, bitSize);
+        this.U = uArray;
+        return uArray;
+    }
+
+    public void addPi(Integer[] pi){
+        this.pi = pi;
+    }
+
+    public Integer[] getPi(){
+        return this.pi;
+    }
+
+    public BigInteger[] getU(){
+        if(U == null){
+            throw new NullPointerException();
+        }
+        else {
+            return U;
+        }
+    }
+
+    public BigInteger[] getV(){
+        if (V==null){
+            throw new NullPointerException();
+        }
+        else {
+            return V;
+        }
+    }
+    public int getBitSize(){
+        return bitSize;
     }
 
     /**
@@ -23,13 +70,16 @@ public class OfflineShuffling  {
      * @return return L0 array
      */
     public BigInteger[] genL0(int arraySize, int bitSize, PaillierPublicKey paillierPublicKey){
-        BigInteger[] vArray = genRandomArray(arraySize, bitSize);
+        /*BigInteger[] vArray = genRandomArray(arraySize, bitSize);
         //System.out.println("v array:");
         //printList(vArray);
-        V = vArray;
+        V = vArray;*/
+        if (V == null){
+            throw new NullPointerException();
+        }
         BigInteger L0[] = new BigInteger[arraySize];
         for(int i = 0; i< L0.length; i++){
-            L0[i] = paillierPublicKey.raw_encrypt(vArray[i]);
+            L0[i] = paillierPublicKey.raw_encrypt(V[i]);
         }
         //System.out.println("L0: ");
         //printList(L0);
@@ -42,26 +92,29 @@ public class OfflineShuffling  {
      * @param bitSize upper bounds of u array is 2^bitSize -1
      * @param twoToL A very big number which is at least bigger than 2* 2^bitSize to make sure u+v is smaller than twoToL
      * @param L0 L0 array from Hi
-     * @param pi permutation function
      * @param paillierPublicKey  Paillier public key
      * @return return L1 array
      */
-    public BigInteger[] genL1(int arraySize, int bitSize, BigInteger twoToL, BigInteger[] L0, Integer[] pi, PaillierPublicKey paillierPublicKey ){
-        BigInteger[] uArray = genRandomArray(arraySize,bitSize);
-        U = uArray;
+    public BigInteger[] genL1(int arraySize, int bitSize, BigInteger twoToL, BigInteger[] L0, PaillierPublicKey paillierPublicKey){
+        /*BigInteger[] uArray = genRandomArray(arraySize,bitSize);
+        U = uArray;*/
         //System.out.println("u Array:");
         //printList(uArray);
+
+        if (this.U == null){
+            throw new NullPointerException();
+        }
         BigInteger[] rArray = genRArray(arraySize,bitSize, twoToL);
         //System.out.println("r Array:");
         //printList(rArray);
         BigInteger L1[] = new BigInteger[arraySize];
         for(int i=0; i< arraySize; i++){
-            BigInteger uPlusR = paillierPublicKey.raw_encrypt((uArray[i].add(rArray[i])).mod(twoToL));
+            BigInteger uPlusR = paillierPublicKey.raw_encrypt((U[i].add(rArray[i])).mod(twoToL));
             L1[i] = paillierPublicKey.raw_add(L0[i], uPlusR);
             //L1[i] = (L0[i].multiply(uPlusR)).mod(paillierPublicKey.getModulusSquared());
         }
         InitSet initSet = new InitSet();
-        return initSet.permRandomArray(L1,pi);
+        return initSet.permRandomArray(L1,this.pi);
     }
 
     /**
@@ -116,9 +169,6 @@ public class OfflineShuffling  {
         }
         return rArray;
     }
-
-
-
 
     /**
      * mod function implementation

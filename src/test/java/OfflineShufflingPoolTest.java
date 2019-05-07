@@ -26,8 +26,8 @@ public class OfflineShufflingPoolTest {
         System.out.println("L2");
         System.out.println(Arrays.toString(L25));
 
-        Integer[] pi2 = offlineShufflingPool.getPi(2);
-        BigInteger[] L22 = offlineShufflingPool.getL2(2);
+        Integer[] pi2 = offlineShufflingPool.getPi(20);
+        BigInteger[] L22 = offlineShufflingPool.getL2(20);
         System.out.println("Pi:");
         System.out.println(Arrays.toString(pi2));
         System.out.println("L2");

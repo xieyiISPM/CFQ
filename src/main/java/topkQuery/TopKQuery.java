@@ -4,6 +4,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import secureExactEditDistance.SecureExactEditDistance;
 import secureShuffle.OfflineShuffling;
+import secureShuffle.OfflineShufflingPool;
 import secureShuffle.SSF;
 
 import java.math.BigInteger;
@@ -40,9 +41,10 @@ public class TopKQuery {
      * @param SA Data shared with party A
      * @param QB Query shared with party B
      * @param SB Data shared with party B
+     * @param pool
      * @throws Exception
      */
-    public void secureQueryPreCompute(BigInteger[] QA, BigInteger[][] SA, BigInteger[] QB, BigInteger[][] SB) throws Exception{
+    public void secureQueryPreCompute(BigInteger[] QA, BigInteger[][] SA, BigInteger[] QB, BigInteger[][] SB, OfflineShufflingPool pool) throws Exception{
         this.m = SA.length; //row length
         this.n = SA[0].length; //column length
 
@@ -59,7 +61,7 @@ public class TopKQuery {
          * compute distance between each record and query
          */
         for (int i = 0; i< m; i++){
-            seed.setDistance(SA[i],SB[i],QA,QB);
+            seed.setDistance(SA[i],SB[i],QA,QB, pool );
             dEDA[i]= seed.getDedA();
             dEDB[i] = seed.getDedB();
         }

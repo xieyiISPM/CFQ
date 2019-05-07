@@ -1,5 +1,7 @@
 import org.junit.jupiter.api.Test;
 import secureBranch.SecureBranch;
+import secureShuffle.OfflineShuffling;
+import secureShuffle.OfflineShufflingPool;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
@@ -34,8 +36,10 @@ public class SecureBranchTest {
 
         SecureBranch sb = new SecureBranch(bitSize);
 
+        OfflineShufflingPool pool = new OfflineShufflingPool(bitSize, new OfflineShuffling());
+        pool.addToPool(2);
 
-        sb.addAndCompare(xA,xB, yA, yB);
+        sb.addAndCompare(xA,xB, yA, yB,pool );
 
         System.out.println("YA: " + sb.getYA());
         System.out.println("YB: "+ sb.getYB());

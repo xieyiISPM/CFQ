@@ -1,5 +1,6 @@
 import com.n1analytics.paillier.PaillierPrivateKey;
 import com.n1analytics.paillier.PaillierPublicKey;
+import helper.Helper;
 import org.junit.jupiter.api.Test;
 import secureShuffle.InitSet;
 import secureShuffle.OfflineShuffling;
@@ -12,7 +13,16 @@ import java.util.*;
 public class ShufflingTest {
     @Test
     void testShuffling() throws Exception{
-        OfflineShuffling offlineShuffling = new OfflineShuffling();
+        int bitSize = 10;
+        int arraySize = 10;
+
+        OfflineShuffling offlineShuffling = new OfflineShuffling(bitSize);
+        Helper<BigInteger> helper = new Helper(bitSize);
+        BigInteger[] U = offlineShuffling.genUArray(arraySize);
+        helper.printArr(U);
+        BigInteger[] V = offlineShuffling.genVArray(arraySize);
+        helper.printArr(V);
+
         /*BigInteger[] randomArray = offlineShuffling.genRandomArray(5,128);
         printList(randomArray);
 
@@ -101,7 +111,7 @@ public class ShufflingTest {
             InitSet initSet = new InitSet();
             Integer[] pi = initSet.genPi(arraySize);
             BigInteger[] L0 = offlineShuffling.genL0(arraySize, bitSize, paillierPublicKey);
-            BigInteger[] L1 = offlineShuffling.genL1(arraySize, bitSize, twoToL, L0, pi, paillierPublicKey);
+            BigInteger[] L1 = offlineShuffling.genL1(arraySize, bitSize, twoToL, L0, paillierPublicKey);
             BigInteger[] L2 = offlineShuffling.genL2(L1, twoToL, paillierPrivateKey);
 
             LinkedList<BigInteger> uvList = new LinkedList<>();
@@ -161,7 +171,7 @@ public class ShufflingTest {
         InitSet initSet = new InitSet();
         Integer[] pi = initSet.genPi(arraySize);
         BigInteger[] L0 = offlineShuffling.genL0(arraySize, bitSize, paillierPublicKey);
-        BigInteger[] L1 = offlineShuffling.genL1(arraySize, bitSize, twoToL, L0, pi, paillierPublicKey);
+        BigInteger[] L1 = offlineShuffling.genL1(arraySize, bitSize, twoToL, L0, paillierPublicKey);
         BigInteger[] L2 = offlineShuffling.genL2(L1, twoToL, paillierPrivateKey);
 
         OnlineShuffling onlineShuffling = new OnlineShuffling();

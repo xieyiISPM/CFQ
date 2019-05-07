@@ -1,6 +1,8 @@
 import org.junit.jupiter.api.Test;
 import secureExactEditDistance.SecureExactEditDistance;
 import secureShuffle.InitSet;
+import secureShuffle.OfflineShuffling;
+import secureShuffle.OfflineShufflingPool;
 
 import java.math.BigInteger;
 
@@ -37,7 +39,9 @@ public class TestSEED {
         System.out.println();
 
         SecureExactEditDistance seed = new SecureExactEditDistance(bitSize);
-        seed.setDistance(xA, xB, yA, yB);
+        OfflineShufflingPool pool = new OfflineShufflingPool(bitSize, new OfflineShuffling());
+        pool.addToPool(arraySize);
+        seed.setDistance(xA, xB, yA, yB, pool );
 
         System.out.println();
         System.out.println("dED_A = "+seed.getDedA());

@@ -1,9 +1,11 @@
 package secureBranch;
 
 import secureShuffle.OfflineShuffling;
+import secureShuffle.OfflineShufflingPool;
 import secureShuffle.SSF;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 
 public class SecureBranch {
     private int bitSize = 10;
@@ -21,50 +23,62 @@ public class SecureBranch {
      * @param xB B's x share
      * @param yA A's y share
      * @param yB B's y share
+     * @param pool
      * @throws Exception
      */
-    public void addAndCompare(BigInteger[] xA, BigInteger[] xB, BigInteger[] yA, BigInteger[] yB) throws Exception{
+    public void addAndCompare(BigInteger[] xA, BigInteger[] xB, BigInteger[] yA, BigInteger[] yB, OfflineShufflingPool pool) throws Exception{
         if(xA.length != xB.length || yA.length!= yB.length || xA.length != yA.length || xA.length != 2){
             throw new IllegalArgumentException("Array sizes do not match!");
         }
 
-        int arraySizeX = xA.length;
+        int arraySize = xA.length;
+
 
         SSF ssf = new SSF(bitSize);
-        Integer[] pi = ssf.getPi(arraySizeX);
+        /*Integer[] pi = ssf.getPi(arraySizeX);*/
 
-        OfflineShuffling offlineShufflingX = new OfflineShuffling();
-        BigInteger[] xBPrime = ssf.getOfflineOutput(arraySizeX, offlineShufflingX, pi);
-        BigInteger[] xAPrime = ssf.getOnlineOutput(arraySizeX,xB, xA,offlineShufflingX, pi );
+        /*OfflineShuffling offlineShufflingSB = new OfflineShuffling(bitSize);
+        offlineShufflingSB.genUArray(arraySize);
+        offlineShufflingSB.genVArray(arraySize);
+        pool = new OfflineShufflingPool(bitSize, offlineShufflingSB);*/
 
-        /*System.out.println("shuffle pi: " + Arrays.toString(pi));
+        /*BigInteger[] xBPrime = ssf.getOfflineOutput(arraySizeX, offlineShufflingX, pi);*/
+
+        BigInteger[] xBPrime = pool.getL2(arraySize);
+        BigInteger[] xAPrime = ssf.getOnlineOutput(arraySize,xB, xA,offlineShufflingSB,pool.getPi(arraySize) );
+        /*BigInteger[] xAPrime = ssf.getOnlineOutput(arraySizeX,xB, xA,offlineShufflingX, pi );*/
+
+
+        System.out.println("shuffle pi: " + Arrays.toString(pool.getPi(arraySize)));
         printArr(xBPrime,"xHPrime");
         printArr(xAPrime,"xCPrime");
 
         System.out.println("X0Prime reconstruct: " + reconstruct(xBPrime[0], xAPrime[0], bitSize));
         System.out.println("X1Prime reconstruct: " + reconstruct(xBPrime[1], xAPrime[1], bitSize));
         System.out.println();
-*/
 
 
-        OfflineShuffling offlineShufflingY = new OfflineShuffling();
-        BigInteger[] yBPrime = ssf.getOfflineOutput(arraySizeX, offlineShufflingY,pi);
-        BigInteger[] yAPrime = ssf.getOnlineOutput(arraySizeX,yB, yA,offlineShufflingY,pi );
+        OfflineShuffling offlineShufflingY = new OfflineShuffling(bitSize);
+        offlineShufflingY.genVArray(arraySize);
+        offlineShufflingY.genUArray(arraySize);
+        BigInteger[] yBPrime = pool.getL2(arraySize);
+        BigInteger[] yAPrime = ssf.getOnlineOutput(arraySize,yB, yA,offlineShufflingY, pool.getPi(arraySize) );
+        /*BigInteger[] yBPrime = ssf.getOfflineOutput(arraySizeX, offlineShufflingY,pi);
+        BigInteger[] yAPrime = ssf.getOnlineOutput(arraySizeX,yB, yA,offlineShufflingY,pi );*/
 
-        /*printArr(yAPrime,"yAPrime");
+        printArr(yAPrime,"yAPrime");
         printArr(yBPrime,"yBPrime");
 
         System.out.println("y0Prime reconstruct: " + reconstruct(yBPrime[0], yAPrime[0], bitSize));
         System.out.println("y1Prime reconstruct: " + reconstruct(yBPrime[1], yAPrime[1], bitSize));
         System.out.println();
-*/
 
        // GarbledCircuit addcmpGC = new GarbledCircuit("ADD-CMP.cir", "b-input", "a-input", "GCParser/results/siclientout", "GCParser/results/siserverout");
         //int theta = addcmpGC.GCADDCMPOutPut(xHPrime[0], xCPrime[0], xHPrime[1], xCPrime[1]);
 
         int theta = thetaHelper(xBPrime[0], xAPrime[0], xBPrime[1], xAPrime[1]);
 
-        // System.out.println("theta = "+ theta);
+        System.out.println("theta = "+ theta);
         if(theta == 1){
             yOutputA = yAPrime[0];
             yOutputB = yBPrime[0];

@@ -1,6 +1,8 @@
 import helper.Helper;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
+import secureShuffle.OfflineShuffling;
+import secureShuffle.OfflineShufflingPool;
 import topkQuery.TopKQuery;
 
 import java.math.BigInteger;
@@ -65,8 +67,11 @@ public class TestTopKQuery {
 
         }
 
+        OfflineShufflingPool pool = new OfflineShufflingPool(bitSize,new OfflineShuffling());
+        pool.addToPool(arraySize);
+
         TopKQuery topKQuery = new TopKQuery(bitSize);
-        topKQuery.secureQueryPreCompute(QA,SA,QB,SB);
+        topKQuery.secureQueryPreCompute(QA,SA,QB,SB, pool );
         topKQuery.genTopKIndexDistTuple(k);
 
         Pair<BigInteger, BigInteger>[] indexAndDistH = topKQuery.getIndexDistTupleB();

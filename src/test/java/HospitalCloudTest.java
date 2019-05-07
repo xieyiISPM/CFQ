@@ -3,6 +3,8 @@ import kNNQuery.Cloud;
 import kNNQuery.Hospital;
 import kNNQuery.KNNQuery;
 import org.junit.jupiter.api.Test;
+import secureShuffle.OfflineShuffling;
+import secureShuffle.OfflineShufflingPool;
 import topkQuery.TopKQuery;
 
 import java.math.BigInteger;
@@ -96,6 +98,7 @@ public class HospitalCloudTest {
         }
         System.out.println(" Hospital size inside cloud: " + cloud.getHospitalSize());
 
+        OfflineShufflingPool pool = new OfflineShufflingPool(bitSize, new OfflineShuffling());
 
         Helper queryHelper= new Helper(bitSize);
         queryHelper.genQuery(arraySize);
@@ -142,7 +145,7 @@ public class HospitalCloudTest {
 
         for(int j= 0; j< cloud.getHospitalSize(); j++){
             TopKQuery topKQuery = new TopKQuery(bitSize);
-            topKQuery.secureQueryPreCompute(hospital[j].getQuery(), hospital[j].getGS(), (BigInteger[])cloud.getHospital(j).getQuery(), (BigInteger[][])cloud.getHospital(j).getGS());
+            topKQuery.secureQueryPreCompute(hospital[j].getQuery(), hospital[j].getGS(), (BigInteger[])cloud.getHospital(j).getQuery(), (BigInteger[][])cloud.getHospital(j).getGS(), pool);
             topKQuery.genTopKIndexDistTuple(k);
             hospital[j].addTopKIndexDistancePair(topKQuery.getTopKPairB());
             cloud.getHospital(j).addTopKIndexDistancePair(topKQuery.getTopKPairA());

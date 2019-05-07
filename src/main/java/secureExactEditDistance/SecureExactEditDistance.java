@@ -1,8 +1,8 @@
 package secureExactEditDistance;
 
-import helper.Helper;
 import secureBranch.SecureBranch;
 import secureMinimumSelection.SecureMiniSelection;
+import secureShuffle.OfflineShufflingPool;
 
 import java.math.BigInteger;
 
@@ -27,9 +27,10 @@ public class SecureExactEditDistance{
      * @param xB B's x shared sequence
      * @param yA A's y shared sequence
      * @param yB B's y shared sequence
+     * @param pool
      * @throws Exception
      */
-    public void setDistance(BigInteger[]xA, BigInteger[] xB, BigInteger[] yA, BigInteger[] yB) throws Exception{
+    public void setDistance(BigInteger[] xA, BigInteger[] xB, BigInteger[] yA, BigInteger[] yB, OfflineShufflingPool pool) throws Exception{
         if (xA.length != xB.length || yA.length != yB.length){
             throw new IllegalArgumentException(); // shared sequence between two parties has to be match
         }
@@ -80,11 +81,11 @@ public class SecureExactEditDistance{
                 BigInteger t2A = yA[i-1].subtract(BigInteger.ONE).mod(twoToL);
                 BigInteger t2B = yB[i-1];
 
-                sb1.addAndCompare(sb1.genArray(t1A,xA[i-1]),sb1.genArray(t1B,xB[i-1]), sb1.genArray(z0A, z1A), sb1.genArray(z0B, z1B));
+                sb1.addAndCompare(sb1.genArray(t1A,xA[i-1]),sb1.genArray(t1B,xB[i-1]), sb1.genArray(z0A, z1A), sb1.genArray(z0B, z1B), pool );
                 BigInteger t3A = sb1.getYA();
                 BigInteger t3B = sb1.getYB();
 
-                sb2.addAndCompare(sb2.genArray(xA[i-1],t2A),sb2.genArray(xB[i-1],t2B), sb2.genArray(t3A, z1A), sb2.genArray(t3B, z1B));
+                sb2.addAndCompare(sb2.genArray(xA[i-1],t2A),sb2.genArray(xB[i-1],t2B), sb2.genArray(t3A, z1A), sb2.genArray(t3B, z1B),pool );
                 BigInteger cSubA = sb2.getYA();
                 BigInteger cSubB = sb2.getYB();
 
